@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 public class Piece extends JLabel {
     //Constants
     public static final int NO_PIECE = 0;
@@ -22,6 +23,8 @@ public class Piece extends JLabel {
         this.rank = rank;
 
         updatePieceUI();
+
+        addMouseListener(new MouseClickListener());
     }
 
     public void updatePieceUI() {
@@ -67,5 +70,19 @@ public class Piece extends JLabel {
         this.rank = rank;
         this.color = color;
         updatePieceUI();
+    }
+
+    private class MouseClickListener extends MouseAdapter {
+        @Override
+        public void mousePressed(MouseEvent e) {
+            if(e.getButton() == MouseEvent.BUTTON3) {
+                String tempRank = JOptionPane.showInputDialog(null, "Enter rank of this piece. (0 = None, 1 = King, 2 = Pawn, 3 = Bishop, 4 = Knight, 5 = Rook, 6 = Queen)");
+                String tempColor = JOptionPane.showInputDialog(null, "Enter color of this piece. (8 = White, 16 = Black) ");
+
+                if(tempRank == null || tempColor == null) return;
+
+                setPiece(Integer.parseInt(tempColor), Integer.parseInt(tempRank));
+            }
+        }
     }
 }
