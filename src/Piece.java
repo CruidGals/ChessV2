@@ -64,6 +64,8 @@ public class Piece extends JLabel {
     }
 
     public void setPiece(int color, int rank) {
-
+        this.rank = rank;
+        this.color = color;
+        updatePieceUI();
     }
 }
