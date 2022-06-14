@@ -1,6 +1,8 @@
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.security.cert.PolicyQualifierInfo;
 public class Piece extends JLabel {
     //Constants
     public static final int NO_PIECE = 0;
@@ -18,13 +20,25 @@ public class Piece extends JLabel {
     private int rank;
     private int color;
 
+    //Vars for dragging
+    Point imageCorner;
+    Point origLocation;
+    Point origPt;
+    int myX;
+    int myY;
+
     public Piece(int color, int rank) {
         this.color = color;
         this.rank = rank;
 
+        setPreferredSize(new Dimension(100,100));
+
+        imageCorner = new Point(0, 0);
+
         updatePieceUI();
 
         addMouseListener(new MouseClickListener());
+        addMouseMotionListener(new MouseMovingListener());
     }
 
     public void updatePieceUI() {
@@ -75,6 +89,13 @@ public class Piece extends JLabel {
     private class MouseClickListener extends MouseAdapter {
         @Override
         public void mousePressed(MouseEvent e) {
+
+            if(e.getButton() == MouseEvent.BUTTON1) {
+                origLocation = getLocation();
+                origPt = e.getPoint();
+            }
+
+            //DEBUG CODE
             if(e.getButton() == MouseEvent.BUTTON3) {
                 String tempRank = JOptionPane.showInputDialog(null, "Enter rank of this piece. (0 = None, 1 = King, 2 = Pawn, 3 = Bishop, 4 = Knight, 5 = Rook, 6 = Queen)");
                 String tempColor = JOptionPane.showInputDialog(null, "Enter color of this piece. (8 = White, 16 = Black) ");
@@ -83,6 +104,16 @@ public class Piece extends JLabel {
 
                 setPiece(Integer.parseInt(tempColor), Integer.parseInt(tempRank));
             }
+
+        }
+    }
+
+    private class MouseMovingListener extends MouseMotionAdapter {
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            Point currentPt = e.getPoint();
+            origLocation.translate((int) (currentPt.getX() - origPt.getX()), (int) (currentPt.getY() - origPt.getY()));
+            setLocation(origLocation);
         }
     }
 }

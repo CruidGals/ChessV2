@@ -10,7 +10,7 @@ public class Board extends JFrame {
     private static JPanel piecePanel;
 
     public Board() {
-        setSize(800,800);
+        setSize(816,816);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         
@@ -44,7 +44,7 @@ public class Board extends JFrame {
         for(int rank = 0; rank < 8; rank++) {
             for(int file = 0; file < 8; file++) {
                 //Do Fen Notation shit here
-                if(rank == 3 && file == 2) {
+                if(rank == 0 && file == 0) {
                     pieces[rank][file] = new Piece(Piece.WHITE, Piece.QUEEN);
                 } else {
                     pieces[rank][file] = new Piece(Piece.WHITE, Piece.NO_PIECE);

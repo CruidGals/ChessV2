@@ -8,5 +8,6 @@ public class Square extends JLabel {
     public Square(Color color) {
         setBackground(color);
         setOpaque(true);
+        setPreferredSize(new Dimension(100,100));
     }
 }
