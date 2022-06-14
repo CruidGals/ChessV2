@@ -7,7 +7,7 @@ public class Board extends JFrame {
 
     private static JLayeredPane layeredPanel = new JLayeredPane();
     private static JPanel boardPanel;
-    private static JPanel piecePanel;
+    private static JLayeredPane piecePanel;
 
     public Board() {
         setSize(816,816);
@@ -67,12 +67,13 @@ public class Board extends JFrame {
         return boardPanel;
     }
 
-    public static JPanel createPieceGraphicPanel() {
-        JPanel piecePanel = new JPanel(new GridLayout(8,8));
+    public static JLayeredPane createPieceGraphicPanel() {
+        JLayeredPane piecePanel = new JLayeredPane();
+        piecePanel.setLayout(new GridLayout(8,8));
 
         for(Piece[] row : pieces) {
             for(Piece col : row) {
-                piecePanel.add(col);
+                piecePanel.add(col, JLayeredPane.DEFAULT_LAYER);
             }
         }
 

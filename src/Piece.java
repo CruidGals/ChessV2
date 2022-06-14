@@ -2,7 +2,6 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.security.cert.PolicyQualifierInfo;
 public class Piece extends JLabel {
     //Constants
     public static final int NO_PIECE = 0;
