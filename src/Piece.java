@@ -18,21 +18,20 @@ public class Piece extends JLabel {
     //Instance vars
     private int rank;
     private int color;
+    private int row;
+    private int col;
 
     //Vars for dragging
-    Point imageCorner;
     Point origLocation;
     Point origPt;
-    int myX;
-    int myY;
 
     public Piece(int color, int rank) {
         this.color = color;
         this.rank = rank;
-
         setPreferredSize(new Dimension(100,100));
 
-        imageCorner = new Point(0, 0);
+        row = getX() / 100;
+        col = getY() / 100;
 
         updatePieceUI();
 
@@ -40,6 +39,16 @@ public class Piece extends JLabel {
         addMouseMotionListener(new MouseMovingListener());
     }
 
+    /*------------------- Getter and Setter Methods --------------------- */
+    public int getRow() {
+        return row;
+    }
+
+    public int getCol() {
+        return col;
+    }
+    /*------------------------------------------------------------------- */
+    
     public void updatePieceUI() {
         String rankName = "", colorName = "";
 
@@ -92,6 +101,7 @@ public class Piece extends JLabel {
             if(e.getButton() == MouseEvent.BUTTON1) {
                 origLocation = getLocation();
                 origPt = e.getPoint();
+                pieceDragHelper();
             }
 
             //DEBUG CODE
@@ -105,6 +115,11 @@ public class Piece extends JLabel {
             }
 
         }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            
+        }
     }
 
     private class MouseMovingListener extends MouseMotionAdapter {
@@ -114,5 +129,9 @@ public class Piece extends JLabel {
             origLocation.translate((int) (currentPt.getX() - origPt.getX()), (int) (currentPt.getY() - origPt.getY()));
             setLocation(origLocation);
         }
+    }
+
+    private void pieceDragHelper() {
+        Board.pieceDraggedAction(this);
     }
 }
