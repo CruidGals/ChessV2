@@ -22,6 +22,7 @@ public class Piece extends JLabel {
     public Piece(int color, int rank) {
         this.color = color;
         this.rank = rank;
+        setOpaque(false);
         setPreferredSize(new Dimension(100,100));
 
         updatePieceUI();

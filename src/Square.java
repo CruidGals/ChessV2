@@ -17,23 +17,11 @@ public class Square extends JLabel {
         setLayout(new GridBagLayout());
         add(piece);
 
-        //addMouseListener(new MouseClickListener());
     }
 
-    private class MouseClickListener extends MouseAdapter {
-        @Override
-        public void mousePressed(MouseEvent e) {
-
-            //DEBUG CODE
-            if(e.getButton() == MouseEvent.BUTTON3) {
-                String tempRank = JOptionPane.showInputDialog(null, "Enter rank of this piece. (0 = None, 1 = King, 2 = Pawn, 3 = Bishop, 4 = Knight, 5 = Rook, 6 = Queen)");
-                String tempColor = JOptionPane.showInputDialog(null, "Enter color of this piece. (8 = White, 16 = Black) ");
-
-                if(tempRank == null || tempColor == null) return;
-
-                piece.setPiece(Integer.parseInt(tempColor), Integer.parseInt(tempRank));
-            }
-
-        }
+    public Piece getPiece() {
+        return piece;
     }
+
+    
 }
