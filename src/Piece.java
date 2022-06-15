@@ -36,23 +36,6 @@ public class Piece extends JLabel {
     public int getColor() {
         return color;
     }
-
-    public void setPiece(Piece piece) {
-        rank = piece.getRank();
-        color = piece.getColor();
-        updatePieceUI();
-    }
-
-    public void setPiece(int rank) {
-        this.rank = rank;
-        updatePieceUI();
-    }
-
-    public void setPiece(int color, int rank) {
-        this.rank = rank;
-        this.color = color;
-        updatePieceUI();
-    }
     /*------------------------------------------------------------------- */
 
     public void updatePieceUI() {
