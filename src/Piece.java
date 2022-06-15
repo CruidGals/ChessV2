@@ -30,13 +30,12 @@ public class Piece extends JLabel {
         this.rank = rank;
         setPreferredSize(new Dimension(100,100));
 
-        row = getX() / 100;
-        col = getY() / 100;
+        row = getY() / 100;
+        col = getX() / 100;
 
         updatePieceUI();
 
         addMouseListener(new MouseClickListener());
-        addMouseMotionListener(new MouseMovingListener());
     }
 
     /*------------------- Getter and Setter Methods --------------------- */
@@ -47,8 +46,33 @@ public class Piece extends JLabel {
     public int getCol() {
         return col;
     }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setPiece(Piece piece) {
+        rank = piece.getRank();
+        color = piece.getColor();
+        updatePieceUI();
+    }
+
+    public void setPiece(int rank) {
+        this.rank = rank;
+        updatePieceUI();
+    }
+
+    public void setPiece(int color, int rank) {
+        this.rank = rank;
+        this.color = color;
+        updatePieceUI();
+    }
     /*------------------------------------------------------------------- */
-    
+
     public void updatePieceUI() {
         String rankName = "", colorName = "";
 
@@ -81,28 +105,16 @@ public class Piece extends JLabel {
 
         setIcon(pieceIcon);
         revalidate();
+
+        row = getY() / 100;
+        col = getX() / 100;
     }
 
-    public void setPiece(int rank) {
-        this.rank = rank;
-        updatePieceUI();
-    }
-
-    public void setPiece(int color, int rank) {
-        this.rank = rank;
-        this.color = color;
-        updatePieceUI();
-    }
+    
 
     private class MouseClickListener extends MouseAdapter {
         @Override
         public void mousePressed(MouseEvent e) {
-
-            if(e.getButton() == MouseEvent.BUTTON1) {
-                origLocation = getLocation();
-                origPt = e.getPoint();
-                pieceDragHelper();
-            }
 
             //DEBUG CODE
             if(e.getButton() == MouseEvent.BUTTON3) {
@@ -115,23 +127,5 @@ public class Piece extends JLabel {
             }
 
         }
-
-        @Override
-        public void mouseReleased(MouseEvent e) {
-            
-        }
-    }
-
-    private class MouseMovingListener extends MouseMotionAdapter {
-        @Override
-        public void mouseDragged(MouseEvent e) {
-            Point currentPt = e.getPoint();
-            origLocation.translate((int) (currentPt.getX() - origPt.getX()), (int) (currentPt.getY() - origPt.getY()));
-            setLocation(origLocation);
-        }
-    }
-
-    private void pieceDragHelper() {
-        Board.pieceDraggedAction(this);
     }
 }

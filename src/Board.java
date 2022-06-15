@@ -79,12 +79,4 @@ public class Board extends JFrame {
 
         return piecePanel;
     }
-
-    /**
-     * Precondition: piece must be a part of pieces[][]
-     * @param piece
-     */
-    public static void pieceDraggedAction(Piece piece) {
-        piecePanel.add(piece, JLayeredPane.DRAG_LAYER);
-    }
 }
