@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class FenDecoder {
 
     /**
@@ -25,6 +27,55 @@ public class FenDecoder {
     /* -------------------- Individual field decoders ------------------------ */
 
     public static void decodePieceRowCodes() {
-        
+        for(int row = 0; row < 8; row ++) {
+            int colIndex = 0;
+            
+            String[] currentCode = pieceRowCodes[row].split("");
+
+            for(String pieceCode : currentCode) {
+                int color;
+                int rank;
+
+                color = Character.isUpperCase(pieceCode.charAt(0)) ? Piece.WHITE : Piece.BLACK;
+
+                pieceCode = pieceCode.toLowerCase();
+
+                //This code decides what rank the piece is based on it's letter in the code
+                if(pieceCode.equals("r")) rank = Piece.ROOK;
+                else if(pieceCode.equals("n")) rank = Piece.KNIGHT;
+                else if(pieceCode.equals("b")) rank = Piece.BISHOP;
+                else if(pieceCode.equals("q")) rank = Piece.QUEEN;
+                else if(pieceCode.equals("k")) rank = Piece.KING;
+                else if(pieceCode.equals("p")) rank = Piece.PAWN;
+                else rank = Piece.NO_PIECE;
+
+                if(isNumeric(pieceCode)) {
+                    for(int i = 0; i < Integer.parseInt(pieceCode); i++) {
+                        Board.pieces[row][colIndex] = new Piece(color, rank);
+                        colIndex++;
+                    }
+                } else {
+                    Board.pieces[row][colIndex] = new Piece(color, rank);
+                }
+
+                colIndex++;
+            }
+        }
+
+        for(Piece[] row : Board.pieces) {
+            System.out.println(Arrays.asList(row));
+        }
+    }
+
+    //Helper methods
+    public static boolean isNumeric(String string) {
+        if(string == null || string.equals("")) return false;
+
+        try {
+            Integer.parseInt(string);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 }

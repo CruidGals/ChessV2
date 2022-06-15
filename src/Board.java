@@ -15,7 +15,7 @@ public class Board extends JFrame {
     private static Square selectedPieceParent;
 
     public Board() {
-        FenDecoder.decodeFenRecord(Game.CURRENT_FEN_RECORD);
+        updateFromFEN();
 
         setSize(816, 839);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -41,18 +41,18 @@ public class Board extends JFrame {
                 boolean isLight = (rank + file) % 2 == 0;
 
                 Color squareColor = isLight ? Square.LIGHT_SQUARE_COLOR : Square.DARK_SQUARE_COLOR;
-                int pRank, pColor = 0;
 
-                if (rank == 0 && file == 0) {
-                    pRank = Piece.QUEEN;
-                    pColor = Piece.WHITE;
-                } else {
-                    pRank = Piece.NO_PIECE;
-                    pColor = Piece.WHITE;
-                }
+                int pColor = pieces[rank][file].getColor();
+                int pRank = pieces[rank][file].getRank();
+
                 board[rank][file] = new Square(squareColor, pColor, pRank);
             }
         }
+    }
+
+    public static void updateFromFEN() {
+        FenDecoder.decodeFenRecord(Game.CURRENT_FEN_RECORD);
+        FenDecoder.decodePieceRowCodes();
     }
 
     /*------------ GUI Implementation -------------- */
