@@ -5,6 +5,7 @@ import java.awt.event.*;
 
 public class Board extends JFrame {
     public static Square[][] board = new Square[8][8];
+    public static Piece[][] pieces = new Piece[8][8];
 
     private static JLayeredPane layeredPanel = new JLayeredPane();
     private static JPanel boardPanel;
@@ -14,6 +15,8 @@ public class Board extends JFrame {
     private static Square selectedPieceParent;
 
     public Board() {
+        FenDecoder.decodeFenRecord(Game.CURRENT_FEN_RECORD);
+
         setSize(816, 839);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
