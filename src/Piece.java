@@ -2,7 +2,7 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
-public class Piece extends JLabel {
+public class Piece extends JPanel {
     //Constants
     public static final int NO_PIECE = 0;
     public static final int KING = 1;
@@ -18,20 +18,20 @@ public class Piece extends JLabel {
     //Instance vars
     private int rank;
     private int color;
-    private int row;
-    private int col;
 
-    //Vars for dragging
-    Point origLocation;
-    Point origPt;
+    //Actual Piece
+    private JLabel pieceLabel = new JLabel();
 
     public Piece(int color, int rank) {
         this.color = color;
         this.rank = rank;
+        setOpaque(false);
+        setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(100,100));
 
-        row = getY() / 100;
-        col = getX() / 100;
+        pieceLabel.setHorizontalAlignment(JLabel.LEFT);
+        pieceLabel.setVerticalAlignment(JLabel.TOP);
+        add(pieceLabel);
 
         updatePieceUI();
 
@@ -39,14 +39,6 @@ public class Piece extends JLabel {
     }
 
     /*------------------- Getter and Setter Methods --------------------- */
-    public int getRow() {
-        return row;
-    }
-
-    public int getCol() {
-        return col;
-    }
-
     public int getRank() {
         return rank;
     }
@@ -103,11 +95,8 @@ public class Piece extends JLabel {
         Image newimg = image.getScaledInstance(100, 100,  Image.SCALE_SMOOTH); // scale it the smooth way  
         pieceIcon = new ImageIcon(newimg);  // transform it back
 
-        setIcon(pieceIcon);
-        revalidate();
-
-        row = getY() / 100;
-        col = getX() / 100;
+        pieceLabel.setIcon(pieceIcon);
+        pieceLabel.revalidate();
     }
 
     
