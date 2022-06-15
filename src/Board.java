@@ -76,13 +76,7 @@ public class Board extends JFrame {
                 selectedPiece = null;
                 
 
-                if (c instanceof Square) {
-                    //System.out.println(((Square) c).getPiece());
-                    return;
-                }
-
-                if(((Piece) c).getRank() == Piece.NO_PIECE)
-                    return;
+                if (c instanceof Square || ((Piece) c).getRank() == Piece.NO_PIECE) return;
 
                 selectedPiece = (Piece) c;
                 selectedPieceParent = (Square) ((Piece) c).getParent();
@@ -101,17 +95,18 @@ public class Board extends JFrame {
 
                 if(c instanceof Piece)
                     c = c.getParent();
-                    System.out.println(c);
-
+                    
+                Square targetSquare = (Square) c;
+                
                 String tempRank = JOptionPane.showInputDialog(null, "Enter rank of this piece. (0 = None, 1 = King, 2 = Pawn, 3 = Bishop, 4 = Knight, 5 = Rook, 6 = Queen)");
                 if(tempRank == null) return;
                 String tempColor = JOptionPane.showInputDialog(null, "Enter color of this piece. (8 = White, 16 = Black) ");
 
                 if(tempRank == null || tempColor == null) return;
 
-                ((Square) c).remove(0);
-                ((Square) c).add(new Piece(Integer.parseInt(tempColor), Integer.parseInt(tempRank)));
-                ((Square) c).validate();
+                targetSquare.remove(0);
+                targetSquare.add(new Piece(Integer.parseInt(tempColor), Integer.parseInt(tempRank)));
+                targetSquare.validate();
             }
         }
 
