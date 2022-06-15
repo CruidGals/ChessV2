@@ -2,7 +2,7 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
-public class Piece extends JPanel {
+public class Piece extends JLabel {
     //Constants
     public static final int NO_PIECE = 0;
     public static final int KING = 1;
@@ -19,23 +19,12 @@ public class Piece extends JPanel {
     private int rank;
     private int color;
 
-    //Actual Piece
-    private JLabel pieceLabel = new JLabel();
-
     public Piece(int color, int rank) {
         this.color = color;
         this.rank = rank;
-        setOpaque(false);
-        setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(100,100));
 
-        pieceLabel.setHorizontalAlignment(JLabel.LEFT);
-        pieceLabel.setVerticalAlignment(JLabel.TOP);
-        add(pieceLabel);
-
         updatePieceUI();
-
-        addMouseListener(new MouseClickListener());
     }
 
     /*------------------- Getter and Setter Methods --------------------- */
@@ -95,26 +84,8 @@ public class Piece extends JPanel {
         Image newimg = image.getScaledInstance(100, 100,  Image.SCALE_SMOOTH); // scale it the smooth way  
         pieceIcon = new ImageIcon(newimg);  // transform it back
 
-        pieceLabel.setIcon(pieceIcon);
-        pieceLabel.revalidate();
+        setIcon(pieceIcon);
+        revalidate();
     }
 
-    
-
-    private class MouseClickListener extends MouseAdapter {
-        @Override
-        public void mousePressed(MouseEvent e) {
-
-            //DEBUG CODE
-            if(e.getButton() == MouseEvent.BUTTON3) {
-                String tempRank = JOptionPane.showInputDialog(null, "Enter rank of this piece. (0 = None, 1 = King, 2 = Pawn, 3 = Bishop, 4 = Knight, 5 = Rook, 6 = Queen)");
-                String tempColor = JOptionPane.showInputDialog(null, "Enter color of this piece. (8 = White, 16 = Black) ");
-
-                if(tempRank == null || tempColor == null) return;
-
-                setPiece(Integer.parseInt(tempColor), Integer.parseInt(tempRank));
-            }
-
-        }
-    }
 }
