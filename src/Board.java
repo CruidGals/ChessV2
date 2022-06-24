@@ -16,12 +16,13 @@ public class Board extends JFrame {
 
     public Board() {
         updateFromFEN();
+        initBoard();
+        Move.initMoves();
 
         setSize(816, 839);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
 
-        initBoard();
         boardPanel = createBoardGraphicPanel();
         layeredPanel.setBounds(0, 0, 800, 800);
         layeredPanel.setOpaque(false);
@@ -48,6 +49,16 @@ public class Board extends JFrame {
                 board[rank][file] = new Square(squareColor, pColor, pRank);
             }
         }
+    }
+
+    /**
+     * Checks if the spot specified in the parameters is within the board space
+     * @param rank 
+     * @param file
+     * @return Boolean value if the specified spot is within the board
+     */
+    public static boolean withinBoard(int rank, int file) {
+        return (rank <= 7 && rank >= 0) && (file <= 7 && file >= 0);
     }
 
     public static void updateFromFEN() {

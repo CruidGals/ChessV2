@@ -74,7 +74,7 @@ public class Piece extends JLabel {
 
     public String toString() {
         String str = "";
-        if(rank == 0) return " ";
+        if(rank == 0) return "";
         else if(rank == KING) str = "K";
         else if(rank == PAWN) str = "P";
         else if(rank == BISHOP) str = "B";

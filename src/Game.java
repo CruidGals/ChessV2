@@ -2,7 +2,7 @@ import javax.swing.*;
 
 public class Game {
 
-    public static final String STARTING_FEN_RECORD = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    public static final String STARTING_FEN_RECORD = "rnbqkbnr/pppp1ppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     public static String CURRENT_FEN_RECORD = STARTING_FEN_RECORD;
 
     public static void main(String[] args) {

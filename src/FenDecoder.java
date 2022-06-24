@@ -56,9 +56,9 @@ public class FenDecoder {
                     }
                 } else {
                     Board.pieces[row][colIndex] = new Piece(color, rank);
+                    colIndex++;
                 }
 
-                colIndex++;
             }
         }
 
