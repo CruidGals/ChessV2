@@ -1,14 +1,16 @@
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MoveAction;
 
 public class Square extends JLabel {
     public static final Color LIGHT_SQUARE_COLOR = new Color(255,255,255);
     public static final Color DARK_SQUARE_COLOR = new Color(118,150,86);
 
-    private ArrayList<Square> movableSpaces = new ArrayList<Square>();
+    /**
+     * HashMap that stores the squares that it can move along if it is an Attackable Square
+     */
+    private HashMap<Square, Boolean> movableSpaces = new HashMap<Square, Boolean>();
 
     private String boardCode;
 
@@ -24,11 +26,11 @@ public class Square extends JLabel {
 
     }
 
-    public void setMovableSpaces(ArrayList<Square> list) {
+    public void setMovableSpaces(HashMap<Square, Boolean> list) {
         movableSpaces = list;
     }
 
-    public ArrayList<Square> getMovableSquares() {
+    public HashMap<Square, Boolean> getMovableSquares() {
         return movableSpaces;
     }
 

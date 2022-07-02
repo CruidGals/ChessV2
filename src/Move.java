@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.HashMap;
 public class Move {
     
     public static void initMoves() {
@@ -17,8 +17,8 @@ public class Move {
 
     /* --------------------- Piece Move Checkers ------------------------------- */
 
-    public static ArrayList<Square> kingPieceMoves(int row, int col) {
-        ArrayList<Square> possibleMoves = new ArrayList<Square>();
+    public static HashMap<Square, Boolean> kingPieceMoves(int row, int col) {
+        HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
 
         for(int i = -1; i <= 1; i++) {
             for(int j = -1; j <= 1; j++) {
@@ -26,7 +26,7 @@ public class Move {
 
                 if(Board.pieces[row][col].getColor() != Board.pieces[row + i][col + j].getColor() || Board.pieces[row + i][col + j].getRank() == Piece.NO_PIECE) {
                     //Implement check/checkmate feature later
-                    possibleMoves.add(Board.board[row + i][col + j]);                   
+                    possibleMoves.put(Board.board[row + i][col + j], Board.pieces[row][col].getColor() != Board.pieces[row + i][col + j].getColor());                   
                 }
             }
         }
@@ -34,32 +34,32 @@ public class Move {
         return possibleMoves;
     }
     
-    public static ArrayList<Square> pawnPieceMoves(int row, int col) {
-        ArrayList<Square> possibleMoves = new ArrayList<Square>();
+    public static HashMap<Square, Boolean> pawnPieceMoves(int row, int col) {
+        HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
 
         return possibleMoves;
     }
 
-    public static ArrayList<Square> bishopPieceMoves(int row, int col) {
-        ArrayList<Square> possibleMoves = new ArrayList<Square>();
+    public static HashMap<Square, Boolean> bishopPieceMoves(int row, int col) {
+        HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
 
         return possibleMoves;
     }
 
-    public static ArrayList<Square> knightPieceMoves(int row, int col) {
-        ArrayList<Square> possibleMoves = new ArrayList<Square>();
+    public static HashMap<Square, Boolean> knightPieceMoves(int row, int col) {
+        HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
 
         return possibleMoves;
     }
 
-    public static ArrayList<Square> rookPieceMoves(int row, int col) {
-        ArrayList<Square> possibleMoves = new ArrayList<Square>();
+    public static HashMap<Square, Boolean> rookPieceMoves(int row, int col) {
+        HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
 
         return possibleMoves;
     }
 
-    public static ArrayList<Square> queenPieceMoves(int row, int col) {
-        ArrayList<Square> possibleMoves = new ArrayList<Square>();
+    public static HashMap<Square, Boolean> queenPieceMoves(int row, int col) {
+        HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
 
         return possibleMoves;
     }
