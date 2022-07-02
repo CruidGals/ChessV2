@@ -37,28 +37,33 @@ public class Board extends JFrame {
     }
 
     public static void initBoard() {
-        for (int rank = 0; rank < 8; rank++) {
-            for (int file = 0; file < 8; file++) {
-                boolean isLight = (rank + file) % 2 == 0;
+        int boardCodeOffset = 8;
+
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                boolean isLight = (row + col) % 2 == 0;
 
                 Color squareColor = isLight ? Square.LIGHT_SQUARE_COLOR : Square.DARK_SQUARE_COLOR;
 
-                int pColor = pieces[rank][file].getColor();
-                int pRank = pieces[rank][file].getRank();
+                int pColor = pieces[row][col].getColor();
+                int pRank = pieces[row][col].getRank();
 
-                board[rank][file] = new Square(squareColor, pColor, pRank);
+                String boardCode = "" + ((char) (col + 97)) + (row + boardCodeOffset);
+
+                board[row][col] = new Square(squareColor, pColor, pRank, boardCode);
             }
+            boardCodeOffset -= 2;
         }
     }
 
     /**
      * Checks if the spot specified in the parameters is within the board space
-     * @param rank 
-     * @param file
+     * @param row 
+     * @param col
      * @return Boolean value if the specified spot is within the board
      */
-    public static boolean withinBoard(int rank, int file) {
-        return (rank <= 7 && rank >= 0) && (file <= 7 && file >= 0);
+    public static boolean withinBoard(int row, int col) {
+        return (row <= 7 && row >= 0) && (col <= 7 && col >= 0);
     }
 
     public static void updateFromFEN() {
