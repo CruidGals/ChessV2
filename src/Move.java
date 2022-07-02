@@ -8,7 +8,6 @@ public class Move {
 
                 switch(square.getPiece().getRank()) {
                     case Piece.KING: square.setMovableSpaces(kingPieceMoves(row, col));
-                                     System.out.println(square.getMovableSquares());
                                      break;
                     default: break;
                 }
@@ -35,4 +34,33 @@ public class Move {
         return possibleMoves;
     }
     
+    public static ArrayList<Square> pawnPieceMoves(int row, int col) {
+        ArrayList<Square> possibleMoves = new ArrayList<Square>();
+
+        return possibleMoves;
+    }
+
+    public static ArrayList<Square> bishopPieceMoves(int row, int col) {
+        ArrayList<Square> possibleMoves = new ArrayList<Square>();
+
+        return possibleMoves;
+    }
+
+    public static ArrayList<Square> knightPieceMoves(int row, int col) {
+        ArrayList<Square> possibleMoves = new ArrayList<Square>();
+
+        return possibleMoves;
+    }
+
+    public static ArrayList<Square> rookPieceMoves(int row, int col) {
+        ArrayList<Square> possibleMoves = new ArrayList<Square>();
+
+        return possibleMoves;
+    }
+
+    public static ArrayList<Square> queenPieceMoves(int row, int col) {
+        ArrayList<Square> possibleMoves = new ArrayList<Square>();
+
+        return possibleMoves;
+    }
 }
