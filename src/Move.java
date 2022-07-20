@@ -1,7 +1,18 @@
-import java.util.HashMap;
+import java.util.*;
 public class Move {
+
+    /**
+     * The Keys defines the end squares, while the Values store which squares can move to the specified Key
+     */
+    public static Map<Square, ArrayList<Square>> allPossibleMoves = new HashMap<Square, ArrayList<Square>>(64);
     
     public static void initMoves() {
+        for(Square[] row : Board.board) {
+            for(Square col : row) {
+                allPossibleMoves.put(col, new ArrayList<Square>());
+            }
+        }
+
         for(int row = 0; row < 8; row++) {
             for(int col = 0; col < 8; col++) {
                 Square square = Board.board[row][col];
@@ -41,6 +52,7 @@ public class Move {
             }
         }
 
+        putMovesOntoDirectory(possibleMoves.keySet(), Board.board[row][col]);
         return possibleMoves;
     }
     
@@ -75,6 +87,7 @@ public class Move {
             possibleMoves.put(Board.board[row + direction * 1][col - 1], true);
         }
 
+        putMovesOntoDirectory(possibleMoves.keySet(), Board.board[row][col]);
         return possibleMoves;
     }
 
@@ -99,6 +112,7 @@ public class Move {
             }
         }
 
+        putMovesOntoDirectory(possibleMoves.keySet(), Board.board[row][col]);
         return possibleMoves;
     }
 
@@ -152,6 +166,7 @@ public class Move {
             }
         }
 
+        putMovesOntoDirectory(possibleMoves.keySet(), Board.board[row][col]);
         return possibleMoves;
     }
 
@@ -190,6 +205,7 @@ public class Move {
             }
         }
 
+        putMovesOntoDirectory(possibleMoves.keySet(), Board.board[row][col]);
         return possibleMoves;
     }
 
@@ -200,6 +216,15 @@ public class Move {
         possibleMoves.putAll(bishopPieceMoves(row, col));
         possibleMoves.putAll(rookPieceMoves(row, col));
 
+        putMovesOntoDirectory(possibleMoves.keySet(), Board.board[row][col]);
         return possibleMoves;
+    }
+
+    /* -------------------- Other helper methods ------------------------------- */
+
+    private static void putMovesOntoDirectory(Set<Square> keys, Square selectedSquare) {
+        for(Square targetSquare : keys) {
+            allPossibleMoves.get(targetSquare).add(selectedSquare);
+        }
     }
 }
