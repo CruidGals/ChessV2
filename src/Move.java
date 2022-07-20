@@ -15,6 +15,8 @@ public class Move {
                                        break;
                     case Piece.KNIGHT: square.setMovableSpaces(knightPieceMoves(row, col));
                                        break;
+                    case Piece.ROOK: square.setMovableSpaces(rookPieceMoves(row, col));
+                                     break;
                     default: break;
                 }
             }
@@ -111,7 +113,7 @@ public class Move {
          * - Later on in the method, it will check one space on the opposite axis of direction (remember a knight moves
          *   2 spaces in one direction and one space in another direction. This part determines the "one space in another direction")
          */
-        
+
         for(int i = 0; i <= 1; i++) {
             for(int displacement = -2; displacement <= 2; displacement += 4) {
 
@@ -153,6 +155,38 @@ public class Move {
 
     public static HashMap<Square, Boolean> rookPieceMoves(int row, int col) {
         HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
+
+        for(int i = -1; i <= 1; i += 2) { //Checks up first, then down
+            int increment = 1;
+            while(Board.withinBoard(row + i * increment, col) &&
+                  Board.pieces[row + i * increment][col].getColor() != Board.pieces[row][col].getColor()) {
+                
+                possibleMoves.put(Board.board[row + i * increment][col], false);
+
+                if(Board.pieces[row + i * increment][col].getColor() != Piece.NO_COLOR) {
+                    possibleMoves.replace(Board.board[row + i * increment][col], true);
+                    break;
+                }
+
+                increment++;
+            }
+        }
+        for(int j = -1; j <= 1; j += 2) { //Checks left then right
+            int increment = 1;
+
+            while(Board.withinBoard(row, col + j * increment) &&
+                  Board.pieces[row][col + j * increment].getColor() != Board.pieces[row][col].getColor()) {
+                
+                possibleMoves.put(Board.board[row][col + j * increment], false);
+
+                if(Board.pieces[row][col + j * increment].getColor() != Piece.NO_COLOR) {
+                    possibleMoves.replace(Board.board[row][col + j * increment], true);
+                    break;
+                }
+
+                increment++;
+            }
+        }
 
         return possibleMoves;
     }
