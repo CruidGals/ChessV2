@@ -9,6 +9,8 @@ public class Move {
                 switch(square.getPiece().getRank()) {
                     case Piece.KING: square.setMovableSpaces(kingPieceMoves(row, col));
                                      break;
+                    case Piece.PAWN: square.setMovableSpaces(pawnPieceMoves(row, col));
+                                     break;
                     default: break;
                 }
             }
@@ -36,6 +38,34 @@ public class Move {
     
     public static HashMap<Square, Boolean> pawnPieceMoves(int row, int col) {
         HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
+
+        boolean canDoubleMove;
+
+        if((Board.pieces[row][col].getColor() == Piece.WHITE && row == 6) || (Board.pieces[row][col].getColor() == Piece.BLACK && row == 1)) {
+            canDoubleMove = true;
+        } else {
+            canDoubleMove = false;
+        }
+
+        //Indicates the direction the pawn is going on the board (negative is going up, positive is going down)
+        int direction = Board.pieces[row][col].getColor() == Piece.WHITE ? -1 : 1;
+
+        //This if statement checks if a regular pawn move is possible
+        if(Board.withinBoard(row  + direction * 1, col) && Board.pieces[row + direction * 1][col].getRank() == Piece.NO_PIECE) {
+            possibleMoves.put(Board.board[row + direction * 1][col], false);
+
+            if(canDoubleMove && (Board.withinBoard(row  + direction * 2, col) && Board.pieces[row + direction * 2][col].getRank() == Piece.NO_PIECE)) {
+                possibleMoves.put(Board.board[row + direction * 2][col], false);
+            }
+        }
+
+        //This if statement checks if an attack is possible (Checks space to the right first then space to the left)
+        if(Board.withinBoard(row  + direction * 1, col + 1) && (Board.pieces[row + direction * 1][col + 1].getRank() != Piece.NO_PIECE && Board.pieces[row + direction * 1][col + 1].getColor() != Board.pieces[row][col].getColor())) {
+            possibleMoves.put(Board.board[row + direction * 1][col + 1], true);
+        }
+        if(Board.withinBoard(row  + direction * 1, col - 1) && (Board.pieces[row + direction * 1][col - 1].getRank() != Piece.NO_PIECE && Board.pieces[row + direction * 1][col - 1].getColor() != Board.pieces[row][col].getColor())) {
+            possibleMoves.put(Board.board[row + direction * 1][col - 1], true);
+        }
 
         return possibleMoves;
     }
