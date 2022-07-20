@@ -13,6 +13,8 @@ public class Move {
                                      break;
                     case Piece.BISHOP: square.setMovableSpaces(bishopPieceMoves(row, col));
                                        break;
+                    case Piece.KNIGHT: square.setMovableSpaces(knightPieceMoves(row, col));
+                                       break;
                     default: break;
                 }
             }
@@ -98,6 +100,53 @@ public class Move {
 
     public static HashMap<Square, Boolean> knightPieceMoves(int row, int col) {
         HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
+
+        /* Difficult to understand
+         * - The first for loop is used as a switch to go from checking spaces horizontally from the knight
+         *   to checking spaces vertically from the knight
+         * - The second for loop is used solely to set the number of spaces the target squares will be
+         *   (A knight always moves 2 spaces in one direction and one space in another direction. The 2 spaces in one direction
+         *    is set by using the 2nd for loop)
+         *   This for loop decides the specfic direction it will check (up or down / left or right)
+         * - Later on in the method, it will check one space on the opposite axis of direction (remember a knight moves
+         *   2 spaces in one direction and one space in another direction. This part determines the "one space in another direction")
+         */
+        
+        for(int i = 0; i <= 1; i++) {
+            for(int displacement = -2; displacement <= 2; displacement += 4) {
+
+                int endRow = row, endCol = col;
+                if(i == 0) {
+                    endRow += displacement;
+                } else {
+                    endCol += displacement;
+                }
+                
+                if(Board.withinBoard(endRow, endCol)) {
+                    if(i == 0) {
+                        for(int direction = -1; direction <= 1; direction += 2) {
+                            if(Board.withinBoard(endRow, endCol + direction) && Board.pieces[endRow][endCol + direction].getColor() != Board.pieces[row][col].getColor()) { //Checks for space below piece
+                                if(Board.pieces[endRow][endCol + direction].getColor() != Piece.NO_COLOR) {
+                                    possibleMoves.put(Board.board[endRow][endCol + direction], true);
+                                } else {
+                                    possibleMoves.put(Board.board[endRow][endCol + direction], false);
+                                }
+                            }
+                        }
+                    } else {
+                        for(int direction = -1; direction <= 1; direction += 2) {
+                            if(Board.withinBoard(endRow + direction, endCol) && Board.pieces[endRow + direction][endCol].getColor() != Board.pieces[row][col].getColor()) { //Checks for space below piece
+                                if(Board.pieces[endRow + direction][endCol].getColor() != Piece.NO_COLOR) {
+                                    possibleMoves.put(Board.board[endRow + direction][endCol], true);
+                                } else {
+                                    possibleMoves.put(Board.board[endRow + direction][endCol], false);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         return possibleMoves;
     }
