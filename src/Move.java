@@ -11,6 +11,8 @@ public class Move {
                                      break;
                     case Piece.PAWN: square.setMovableSpaces(pawnPieceMoves(row, col));
                                      break;
+                    case Piece.BISHOP: square.setMovableSpaces(bishopPieceMoves(row, col));
+                                       break;
                     default: break;
                 }
             }
@@ -72,6 +74,24 @@ public class Move {
 
     public static HashMap<Square, Boolean> bishopPieceMoves(int row, int col) {
         HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
+
+        for(int i = -1; i <= 1; i += 2) { //Checks up diagonals first, then down diagonals
+            for(int j = -1; j <= 1; j += 2) { //Checks left then right
+                int increment = 1;
+                while(Board.withinBoard(row + i * increment, col + j * increment) &&
+                      Board.pieces[row + i * increment][col + j * increment].getColor() != Board.pieces[row][col].getColor()) {
+                        
+                    possibleMoves.put(Board.board[row + i * increment][col + j * increment], false);
+
+                    if(Board.pieces[row + i * increment][col + j * increment].getColor() != Piece.NO_COLOR) {
+                        possibleMoves.replace(Board.board[row + i * increment][col + j * increment], true);
+                        break;
+                    }
+
+                    increment++;
+                }
+            }
+        }
 
         return possibleMoves;
     }
