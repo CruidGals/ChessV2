@@ -17,6 +17,8 @@ public class Move {
                                        break;
                     case Piece.ROOK: square.setMovableSpaces(rookPieceMoves(row, col));
                                      break;
+                    case Piece.QUEEN: square.setMovableSpaces(queenPieceMoves(row, col));
+                                      break;
                     default: break;
                 }
             }
@@ -193,6 +195,10 @@ public class Move {
 
     public static HashMap<Square, Boolean> queenPieceMoves(int row, int col) {
         HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
+
+        //A queen is basically a rook + bishop
+        possibleMoves.putAll(bishopPieceMoves(row, col));
+        possibleMoves.putAll(rookPieceMoves(row, col));
 
         return possibleMoves;
     }
