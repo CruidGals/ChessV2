@@ -51,7 +51,7 @@ public class FenDecoder {
 
                 if(isNumeric(pieceCode)) {
                     for(int i = 0; i < Integer.parseInt(pieceCode); i++) {
-                        Board.pieces[row][colIndex] = new Piece(color, rank);
+                        Board.pieces[row][colIndex] = new Piece(Piece.NO_COLOR, rank);
                         colIndex++;
                     }
                 } else {

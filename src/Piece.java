@@ -14,6 +14,7 @@ public class Piece extends JLabel {
 
     public static final int WHITE = 8;
     public static final int BLACK = 16;
+    public static final int NO_COLOR = 24;
 
     //Instance vars
     private int rank;
@@ -63,6 +64,7 @@ public class Piece extends JLabel {
         } else if (color == BLACK) {
             colorName = "Black";
         }
+        
         ImageIcon pieceIcon = new ImageIcon(getClass().getResource("resources/" + colorName + rankName + ".png")); // load the image to a imageIcon
         Image image = pieceIcon.getImage(); // transform it 
         Image newimg = image.getScaledInstance(100, 100,  Image.SCALE_SMOOTH); // scale it the smooth way  
