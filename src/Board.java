@@ -50,7 +50,7 @@ public class Board extends JFrame {
 
                 String boardCode = "" + ((char) (col + 97)) + (row + boardCodeOffset);
 
-                board[row][col] = new Square(squareColor, pColor, pRank, boardCode);
+                board[row][col] = new Square(squareColor, pColor, pRank, row, col, boardCode);
             }
             boardCodeOffset -= 2;
         }
@@ -159,7 +159,7 @@ public class Board extends JFrame {
                 targetSquare.remove(0);
                 targetSquare.add(selectedPiece);
                 targetSquare.validate();
-                //Move.updatePossibleMoves(targetSquare);
+                Move.updatePossibleMoves(targetSquare);
             } else {
                 selectedPieceParent.add(selectedPiece);
                 selectedPieceParent.validate();

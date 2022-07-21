@@ -13,9 +13,13 @@ public class Square extends JLabel {
     private HashMap<Square, Boolean> movableSpaces = new HashMap<Square, Boolean>();
 
     private String boardCode;
+    private int row;
+    private int col;
 
-    public Square(Color squareColor, int color, int rank, String boardCode) {
+    public Square(Color squareColor, int color, int rank, int row, int col, String boardCode) {
         this.boardCode = boardCode;
+        this.row = row;
+        this.col = col;
 
         setBackground(squareColor);
         setOpaque(true);
@@ -26,11 +30,17 @@ public class Square extends JLabel {
 
     }
 
+    public void setMovableSpace(Square key, Boolean value) {
+        if(!movableSpaces.containsKey(key)) return;
+        movableSpaces.replace(key, value);
+    }
+
     public void setAllMovableSpaces(HashMap<Square, Boolean> list) {
         movableSpaces = list;
     }
 
     public void removeMovableSpace(Square space) {
+        if(!movableSpaces.containsKey(space)) return;
         movableSpaces.remove(space);
     }
 
@@ -44,6 +54,14 @@ public class Square extends JLabel {
 
     public Piece getPiece() {
         return (Piece) getComponent(0);
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getCol() {
+        return col;
     }
 
     public String toString() {
