@@ -1,15 +1,17 @@
 import java.util.*;
+import java.util.concurrent.*;
 public class Move {
 
+    static int test = 0;
     /**
      * The Keys defines the end squares, while the Values store which squares can move to the specified Key
      */
-    public static Map<Square, ArrayList<Square>> allPossibleMoves = new HashMap<Square, ArrayList<Square>>(64);
+    public static Map<Square, CopyOnWriteArrayList<Square>> allPossibleMoves = new HashMap<Square, CopyOnWriteArrayList<Square>>(64);
     
     public static void initMoves() {
         for(Square[] row : Board.board) {
             for(Square col : row) {
-                allPossibleMoves.put(col, new ArrayList<Square>());
+                allPossibleMoves.put(col, new CopyOnWriteArrayList<Square>());
             }
         }
 
@@ -141,6 +143,7 @@ public class Move {
                 }
                 
                 if(Board.withinBoard(endRow, endCol)) {
+                    System.out.println(test);
                     if(i == 0) {
                         for(int direction = -1; direction <= 1; direction += 2) {
                             if(Board.withinBoard(endRow, endCol + direction) && Board.pieces[endRow][endCol + direction].getColor() != Board.pieces[row][col].getColor()) { //Checks for space below piece
@@ -165,6 +168,7 @@ public class Move {
                 }
             }
         }
+        test++;
 
         putMovesOntoDirectory(possibleMoves.keySet(), Board.board[row][col]);
         return possibleMoves;
@@ -235,9 +239,35 @@ public class Move {
         selectedSquare.removeAllMovableSpaces();
     }
 
-    /*public static void updatePossibleMoves(Square targetSquare) {
+    public static void updatePossibleMoves(Square targetSquare) {
         for(Square square : allPossibleMoves.get(targetSquare)) {
-            if()
+            if(square.getPiece().getColor() == targetSquare.getPiece().getColor()) {
+                allPossibleMoves.get(targetSquare).remove(square);
+            } else {
+                if(square.getPiece().getColor() != Piece.NO_COLOR) {
+                    square.setMovableSpace(targetSquare, true);
+                } else {
+                    square.setMovableSpace(targetSquare, false);
+                }
+            }
         }
-    }*/
+
+        int row = targetSquare.getRow(), col = targetSquare.getCol();
+
+        switch(targetSquare.getPiece().getRank()) {
+            case Piece.KING: targetSquare.setAllMovableSpaces(kingPieceMoves(row, col));
+                             break;
+            case Piece.PAWN: targetSquare.setAllMovableSpaces(pawnPieceMoves(row, col));
+                             break;
+            case Piece.BISHOP: targetSquare.setAllMovableSpaces(bishopPieceMoves(row, col));
+                               break;
+            case Piece.KNIGHT: targetSquare.setAllMovableSpaces(knightPieceMoves(row, col));
+                               break;
+            case Piece.ROOK: targetSquare.setAllMovableSpaces(rookPieceMoves(row, col));
+                             break;
+            case Piece.QUEEN: targetSquare.setAllMovableSpaces(queenPieceMoves(row, col));
+                              break;
+            default: break;
+        }
+    }
 }
