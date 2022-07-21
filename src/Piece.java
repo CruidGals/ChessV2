@@ -29,6 +29,15 @@ public class Piece extends JLabel {
         updatePieceUI();
     }
 
+    public Piece(Piece piece) {
+        color = piece.getColor();
+        rank = piece.getRank();
+        setOpaque(false);
+        setPreferredSize(new Dimension(100,100));
+        
+        updatePieceUI();
+    }
+
     /*------------------- Getter and Setter Methods --------------------- */
     public int getRank() {
         return rank;
