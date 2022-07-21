@@ -136,7 +136,7 @@ public class Board extends JFrame {
             selectedPiece.setVisible(false);
             layeredPanel.remove(selectedPiece);
             selectedPiece.setVisible(true);
-
+            
             int xMax = boardPanel.getWidth() - selectedPiece.getWidth();
             int x = Math.min(e.getX(), xMax);
             x = Math.max(x, 0);
@@ -145,20 +145,25 @@ public class Board extends JFrame {
             int y = Math.min(e.getY(), yMax);
             y = Math.max(y, 0);
             
-            
             Component c = boardPanel.findComponentAt(x, y);
             if(c != selectedPieceParent) 
                 c = c.getParent();
             
             Square targetSquare = (Square) c;
 
-            selectedPieceParent.add(new Piece(Piece.WHITE, Piece.NO_PIECE));
-            selectedPieceParent.validate();
-
-            targetSquare.remove(0);
-            targetSquare.add(selectedPiece);
-            targetSquare.validate();
-
+            if(selectedPieceParent.getMovableSquares().containsKey(targetSquare)) {
+                Move.removeMovesFromSquare(selectedPieceParent);
+                selectedPieceParent.add(new Piece(Piece.NO_COLOR, Piece.NO_PIECE));
+                selectedPieceParent.validate();
+                
+                targetSquare.remove(0);
+                targetSquare.add(selectedPiece);
+                targetSquare.validate();
+                //Move.updatePossibleMoves(targetSquare);
+            } else {
+                selectedPieceParent.add(selectedPiece);
+                selectedPieceParent.validate();
+            }
         }
 
     }

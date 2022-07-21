@@ -26,8 +26,16 @@ public class Square extends JLabel {
 
     }
 
-    public void setMovableSpaces(HashMap<Square, Boolean> list) {
+    public void setAllMovableSpaces(HashMap<Square, Boolean> list) {
         movableSpaces = list;
+    }
+
+    public void removeMovableSpace(Square space) {
+        movableSpaces.remove(space);
+    }
+
+    public void removeAllMovableSpaces() {
+        movableSpaces.clear();
     }
 
     public HashMap<Square, Boolean> getMovableSquares() {

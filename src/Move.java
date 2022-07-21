@@ -18,17 +18,17 @@ public class Move {
                 Square square = Board.board[row][col];
 
                 switch(square.getPiece().getRank()) {
-                    case Piece.KING: square.setMovableSpaces(kingPieceMoves(row, col));
+                    case Piece.KING: square.setAllMovableSpaces(kingPieceMoves(row, col));
                                      break;
-                    case Piece.PAWN: square.setMovableSpaces(pawnPieceMoves(row, col));
+                    case Piece.PAWN: square.setAllMovableSpaces(pawnPieceMoves(row, col));
                                      break;
-                    case Piece.BISHOP: square.setMovableSpaces(bishopPieceMoves(row, col));
+                    case Piece.BISHOP: square.setAllMovableSpaces(bishopPieceMoves(row, col));
                                        break;
-                    case Piece.KNIGHT: square.setMovableSpaces(knightPieceMoves(row, col));
+                    case Piece.KNIGHT: square.setAllMovableSpaces(knightPieceMoves(row, col));
                                        break;
-                    case Piece.ROOK: square.setMovableSpaces(rookPieceMoves(row, col));
+                    case Piece.ROOK: square.setAllMovableSpaces(rookPieceMoves(row, col));
                                      break;
-                    case Piece.QUEEN: square.setMovableSpaces(queenPieceMoves(row, col));
+                    case Piece.QUEEN: square.setAllMovableSpaces(queenPieceMoves(row, col));
                                       break;
                     default: break;
                 }
@@ -227,4 +227,17 @@ public class Move {
             allPossibleMoves.get(targetSquare).add(selectedSquare);
         }
     }
+
+    public static void removeMovesFromSquare(Square selectedSquare) {
+        for(Square square : selectedSquare.getMovableSquares().keySet()) {
+            allPossibleMoves.get(square).remove(selectedSquare);
+        }
+        selectedSquare.removeAllMovableSpaces();
+    }
+
+    /*public static void updatePossibleMoves(Square targetSquare) {
+        for(Square square : allPossibleMoves.get(targetSquare)) {
+            if()
+        }
+    }*/
 }
