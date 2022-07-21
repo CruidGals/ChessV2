@@ -5,7 +5,7 @@ public class FenDecoder {
     /**
      * Starting from the very top row (index 0), lists the piece arrangement for each row
      */
-    public static String[] pieceRowCodes = new String[8];
+    public static String pieceRowCode;
     public static String turn = "";
     public static String castlingStatus = "";
     public static String enPassantTargetSquare = "";
@@ -20,13 +20,13 @@ public class FenDecoder {
         enPassantTargetSquare = fields[3];
         halfMoveCount = Integer.parseInt(fields[4]);
         fullMoveCount = Integer.parseInt(fields[5]);
-
-        pieceRowCodes = fields[0].split("/");
     }
 
     /* -------------------- Individual field decoders ------------------------ */
 
     public static void decodePieceRowCodes() {
+        String[] pieceRowCodes = pieceRowCode.split("/");
+
         for(int row = 0; row < 8; row ++) {
             int colIndex = 0;
             
@@ -77,5 +77,13 @@ public class FenDecoder {
         } catch (NumberFormatException e) {
             return false;
         }
+    }
+
+    public static void changeCurrentFENRecord() {
+
+    }
+
+    public static void changePieceRowCodes(Square[] affectedSquares) {
+
     }
 }
