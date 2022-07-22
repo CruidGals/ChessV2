@@ -7,7 +7,6 @@ public class Move {
      * The Keys defines the end squares, while the Values store which squares can move to the specified Key
      */
     public static Map<Square, CopyOnWriteArrayList<Square>> allPossibleMoves = new HashMap<Square, CopyOnWriteArrayList<Square>>(64);
-    public static Map<Square, CopyOnWriteArrayList<Square>> allBlockedMoves = new HashMap<Square, CopyOnWriteArrayList<Square>>(64);
     
     public static void initMoves() {
         for(Square[] row : Board.board) {

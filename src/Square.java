@@ -12,12 +12,6 @@ public class Square extends JLabel {
      */
     private HashMap<Square, Boolean> movableSpaces = new HashMap<Square, Boolean>();
 
-    /**
-     * HashMap that stores the squares that they could move onto but is blocked as a result of another
-     * piece blocking the movement or if a Pawn cannot move onto a space because it cannot attack a piece.
-     */
-    private HashMap<Square, Boolean> blockedSpaces = new HashMap<Square, Boolean>();
-
     private String boardCode;
     private int row;
     private int col;
