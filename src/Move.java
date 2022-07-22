@@ -120,6 +120,7 @@ public class Move {
 
     public static HashMap<Square, Boolean> knightPieceMoves(int row, int col) {
         HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
+        System.out.println(row + " " + col);
 
         /* Difficult to understand
          * - The first for loop is used as a switch to go from checking spaces horizontally from the knight
@@ -134,33 +135,26 @@ public class Move {
 
         for(int i = 0; i <= 1; i++) {
             for(int displacement = -2; displacement <= 2; displacement += 4) {
-
-                int endRow = row, endCol = col;
                 if(i == 0) {
-                    endRow += displacement;
-                } else {
-                    endCol += displacement;
-                }
-                
-                if(Board.withinBoard(endRow, endCol)) {
-                    System.out.println(test);
-                    if(i == 0) {
+                    if(Board.withinBoard(row + displacement, col)) {
                         for(int direction = -1; direction <= 1; direction += 2) {
-                            if(Board.withinBoard(endRow, endCol + direction) && Board.pieces[endRow][endCol + direction].getColor() != Board.pieces[row][col].getColor()) { //Checks for space below piece
-                                if(Board.pieces[endRow][endCol + direction].getColor() != Piece.NO_COLOR) {
-                                    possibleMoves.put(Board.board[endRow][endCol + direction], true);
+                            if(Board.withinBoard(row + displacement, col + direction) && Board.pieces[row + displacement][col + direction].getColor() != Board.pieces[row][col].getColor()) { //Checks for space below piece
+                                if(Board.pieces[row + displacement][col + direction].getColor() != Piece.NO_COLOR) {
+                                    possibleMoves.put(Board.board[row + displacement][col + direction], true);
                                 } else {
-                                    possibleMoves.put(Board.board[endRow][endCol + direction], false);
+                                    possibleMoves.put(Board.board[row + displacement][col + direction], false);
                                 }
                             }
                         }
-                    } else {
+                    }
+                } else {
+                    if(Board.withinBoard(row, col + displacement)) {
                         for(int direction = -1; direction <= 1; direction += 2) {
-                            if(Board.withinBoard(endRow + direction, endCol) && Board.pieces[endRow + direction][endCol].getColor() != Board.pieces[row][col].getColor()) { //Checks for space below piece
-                                if(Board.pieces[endRow + direction][endCol].getColor() != Piece.NO_COLOR) {
-                                    possibleMoves.put(Board.board[endRow + direction][endCol], true);
+                            if(Board.withinBoard(row + direction, col + displacement) && Board.pieces[row + direction][col + displacement].getColor() != Board.pieces[row][col].getColor()) { //Checks for space below piece
+                                if(Board.pieces[row + direction][col + displacement].getColor() != Piece.NO_COLOR) {
+                                    possibleMoves.put(Board.board[row + direction][col + displacement], true);
                                 } else {
-                                    possibleMoves.put(Board.board[endRow + direction][endCol], false);
+                                    possibleMoves.put(Board.board[row + direction][col + displacement], false);
                                 }
                             }
                         }
@@ -168,8 +162,7 @@ public class Move {
                 }
             }
         }
-        test++;
-
+        
         putMovesOntoDirectory(possibleMoves.keySet(), Board.board[row][col]);
         return possibleMoves;
     }
