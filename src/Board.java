@@ -2,6 +2,7 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Arrays;
 
 public class Board extends JFrame {
     public static Square[][] board = new Square[8][8];
@@ -159,11 +160,15 @@ public class Board extends JFrame {
                 targetSquare.remove(0);
                 targetSquare.add(selectedPiece);
                 targetSquare.validate();
-                Move.updatePossibleMoves(targetSquare);
+                FenDecoder.changePieceRowCodes(new Square[] {selectedPieceParent, targetSquare});
             } else {
                 selectedPieceParent.add(selectedPiece);
                 selectedPieceParent.validate();
             }
+
+            Move.updatePossibleMoves(targetSquare);
+            
+            System.out.println(targetSquare.getMovableSquares());
         }
 
     }
