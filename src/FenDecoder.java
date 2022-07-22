@@ -15,6 +15,7 @@ public class FenDecoder {
     public static void decodeFenRecord(String fenRecord) {
         String[] fields = fenRecord.split(" ");
 
+        pieceRowCode = fields[0];
         turn = fields[1];
         castlingStatus = fields[2];
         enPassantTargetSquare = fields[3];
@@ -79,11 +80,41 @@ public class FenDecoder {
         }
     }
 
-    public static void changeCurrentFENRecord() {
-
+    public static void updateCurrentFENRecord() {
+        Game.CURRENT_FEN_RECORD = pieceRowCode + " " + turn + " " + castlingStatus + " " + enPassantTargetSquare + " " + halfMoveCount + " " + fullMoveCount;
     }
 
     public static void changePieceRowCodes(Square[] affectedSquares) {
+        //Updating the piece array in Board.java
+        for(Square square : affectedSquares) {
+            Board.pieces[square.getRow()][square.getCol()] = square.getPiece();
+        }
 
+        String pieceCode = "";
+
+        for(int row = 0; row < 8; row++) {
+            int noneCount = 0;
+            for(int col = 0; col < 8; col++) {
+                Piece currentPiece = Board.pieces[row][col];
+
+                if(currentPiece.getRank() == Piece.NO_PIECE) {
+                    noneCount++;
+                } else {
+                    if(noneCount > 0) {
+                        pieceCode += "" + noneCount;
+                        noneCount = 0;
+                    }
+
+                    pieceCode += currentPiece.toString();
+                }
+            }
+
+            if(row != 7) {
+                pieceCode += "/";
+            }
+        }
+
+        pieceRowCode = pieceCode;
+        updateCurrentFENRecord();
     }
 }
