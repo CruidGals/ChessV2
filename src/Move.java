@@ -41,7 +41,7 @@ public class Move {
 
     /* --------------------- Piece Move Checkers ------------------------------- */
 
-    public static HashMap<Square, Boolean>[] kingPieceMoves(int row, int col) {
+    public static HashMap<Square, Boolean> kingPieceMoves(int row, int col) {
         HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
 
         for(int i = -1; i <= 1; i++) {
@@ -59,7 +59,7 @@ public class Move {
         return possibleMoves;
     }
     
-    public static HashMap<Square, Boolean>[] pawnPieceMoves(int row, int col) {
+    public static HashMap<Square, Boolean> pawnPieceMoves(int row, int col) {
         HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
 
         boolean canDoubleMove;
@@ -94,7 +94,7 @@ public class Move {
         return possibleMoves;
     }
 
-    public static HashMap<Square, Boolean>[] bishopPieceMoves(int row, int col) {
+    public static HashMap<Square, Boolean> bishopPieceMoves(int row, int col) {
         HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
 
         for(int i = -1; i <= 1; i += 2) { //Checks up diagonals first, then down diagonals
@@ -119,7 +119,7 @@ public class Move {
         return possibleMoves;
     }
 
-    public static HashMap<Square, Boolean>[] knightPieceMoves(int row, int col) {
+    public static HashMap<Square, Boolean> knightPieceMoves(int row, int col) {
         HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
         System.out.println(row + " " + col);
 
@@ -168,7 +168,7 @@ public class Move {
         return possibleMoves;
     }
 
-    public static HashMap<Square, Boolean>[] rookPieceMoves(int row, int col) {
+    public static HashMap<Square, Boolean> rookPieceMoves(int row, int col) {
         HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
 
         for(int i = -1; i <= 1; i += 2) { //Checks up first, then down
@@ -207,7 +207,7 @@ public class Move {
         return possibleMoves;
     }
 
-    public static HashMap<Square, Boolean>[] queenPieceMoves(int row, int col) {
+    public static HashMap<Square, Boolean> queenPieceMoves(int row, int col) {
         HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
 
         //A queen is basically a rook + bishop
