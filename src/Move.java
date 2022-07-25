@@ -2,11 +2,14 @@ import java.util.*;
 import java.util.concurrent.*;
 public class Move {
 
-    static int test = 0;
     /**
      * The Keys defines the end squares, while the Values store which squares can move to the specified Key
      */
-    public static Map<Square, CopyOnWriteArrayList<Square>> allPossibleMoves = new HashMap<Square, CopyOnWriteArrayList<Square>>(64);
+    public static Map<Square, CopyOnWriteArrayList<Square>> allPossibleMoves = new HashMap<>(64);
+
+    public static final boolean[] MOVABLE_ATTACKABLE = {true, true};
+    public static final boolean[] MOVABLE_UNATTACKABLE = {true, false};
+    public static final boolean[] BLOCKED = {false, false};
     
     public static void initMoves() {
         for(Square[] row : Board.board) {
@@ -20,17 +23,17 @@ public class Move {
                 Square square = Board.board[row][col];
 
                 switch(square.getPiece().getRank()) {
-                    case Piece.KING: square.setAllMovableSpaces(kingPieceMoves(row, col));
+                    case Piece.KING: square.setAllInteractableSpaces(kingPieceMoves(row, col));
                                      break;
-                    case Piece.PAWN: square.setAllMovableSpaces(pawnPieceMoves(row, col));
+                    case Piece.PAWN: square.setAllInteractableSpaces(pawnPieceMoves(row, col));
                                      break;
-                    case Piece.BISHOP: square.setAllMovableSpaces(bishopPieceMoves(row, col));
+                    case Piece.BISHOP: square.setAllInteractableSpaces(bishopPieceMoves(row, col));
                                        break;
-                    case Piece.KNIGHT: square.setAllMovableSpaces(knightPieceMoves(row, col));
+                    case Piece.KNIGHT: square.setAllInteractableSpaces(knightPieceMoves(row, col));
                                        break;
-                    case Piece.ROOK: square.setAllMovableSpaces(rookPieceMoves(row, col));
+                    case Piece.ROOK: square.setAllInteractableSpaces(rookPieceMoves(row, col));
                                      break;
-                    case Piece.QUEEN: square.setAllMovableSpaces(queenPieceMoves(row, col));
+                    case Piece.QUEEN: square.setAllInteractableSpaces(queenPieceMoves(row, col));
                                       break;
                     default: break;
                 }
@@ -40,16 +43,22 @@ public class Move {
 
     /* --------------------- Piece Move Checkers ------------------------------- */
 
-    public static HashMap<Square, Boolean> kingPieceMoves(int row, int col) {
-        HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
+    public static HashMap<Square, boolean[]> kingPieceMoves(int row, int col) {
+        HashMap<Square, boolean[]> possibleMoves = new HashMap<>();
 
         for(int i = -1; i <= 1; i++) {
             for(int j = -1; j <= 1; j++) {
                 if(!Board.withinBoard(row + i, col + j) || (i == 0 && j == 0)) continue;
 
-                if(Board.pieces[row][col].getColor() != Board.pieces[row + i][col + j].getColor() || Board.pieces[row + i][col + j].getRank() == Piece.NO_PIECE) {
+                if(Board.pieces[row][col].getColor() != Board.pieces[row + i][col + j].getColor()) {
                     //Implement check/checkmate feature later
-                    possibleMoves.put(Board.board[row + i][col + j], Board.pieces[row][col].getColor() != Board.pieces[row + i][col + j].getColor());                   
+                    if(Board.pieces[row + i][col + j].getRank() == Piece.NO_PIECE) {
+                        possibleMoves.put(Board.board[row + i][col + j], MOVABLE_UNATTACKABLE);   
+                    } else {
+                        possibleMoves.put(Board.board[row + i][col + j], MOVABLE_ATTACKABLE);  
+                    }             
+                } else {
+                    possibleMoves.put(Board.board[row + i][col + j], BLOCKED);
                 }
             }
         }
@@ -58,8 +67,8 @@ public class Move {
         return possibleMoves;
     }
     
-    public static HashMap<Square, Boolean> pawnPieceMoves(int row, int col) {
-        HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
+    public static HashMap<Square, boolean[]> pawnPieceMoves(int row, int col) {
+        HashMap<Square, boolean[]> possibleMoves = new HashMap<>();
 
         boolean canDoubleMove;
 
@@ -74,27 +83,31 @@ public class Move {
 
         //This if statement checks if a regular pawn move is possible
         if(Board.withinBoard(row  + direction * 1, col) && Board.pieces[row + direction * 1][col].getRank() == Piece.NO_PIECE) {
-            possibleMoves.put(Board.board[row + direction * 1][col], false);
+            possibleMoves.put(Board.board[row + direction * 1][col], MOVABLE_UNATTACKABLE);
 
             if(canDoubleMove && (Board.withinBoard(row  + direction * 2, col) && Board.pieces[row + direction * 2][col].getRank() == Piece.NO_PIECE)) {
-                possibleMoves.put(Board.board[row + direction * 2][col], false);
+                possibleMoves.put(Board.board[row + direction * 2][col], MOVABLE_UNATTACKABLE);
             }
         }
 
         //This if statement checks if an attack is possible (Checks space to the right first then space to the left)
         if(Board.withinBoard(row  + direction * 1, col + 1) && (Board.pieces[row + direction * 1][col + 1].getRank() != Piece.NO_PIECE && Board.pieces[row + direction * 1][col + 1].getColor() != Board.pieces[row][col].getColor())) {
-            possibleMoves.put(Board.board[row + direction * 1][col + 1], true);
+            possibleMoves.put(Board.board[row + direction * 1][col + 1], MOVABLE_ATTACKABLE);
+        } else {
+            possibleMoves.put(Board.board[row + direction * 1][col + 1], BLOCKED);
         }
         if(Board.withinBoard(row  + direction * 1, col - 1) && (Board.pieces[row + direction * 1][col - 1].getRank() != Piece.NO_PIECE && Board.pieces[row + direction * 1][col - 1].getColor() != Board.pieces[row][col].getColor())) {
-            possibleMoves.put(Board.board[row + direction * 1][col - 1], true);
+            possibleMoves.put(Board.board[row + direction * 1][col - 1], MOVABLE_ATTACKABLE);
+        } else {
+            possibleMoves.put(Board.board[row + direction * 1][col + 1], BLOCKED);
         }
 
         putMovesOntoDirectory(possibleMoves.keySet(), Board.board[row][col]);
         return possibleMoves;
     }
 
-    public static HashMap<Square, Boolean> bishopPieceMoves(int row, int col) {
-        HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
+    public static HashMap<Square, boolean[]> bishopPieceMoves(int row, int col) {
+        HashMap<Square, boolean[]> possibleMoves = new HashMap<>();
 
         for(int i = -1; i <= 1; i += 2) { //Checks up diagonals first, then down diagonals
             for(int j = -1; j <= 1; j += 2) { //Checks left then right
@@ -102,14 +115,18 @@ public class Move {
                 while(Board.withinBoard(row + i * increment, col + j * increment) &&
                       Board.pieces[row + i * increment][col + j * increment].getColor() != Board.pieces[row][col].getColor()) {
                         
-                    possibleMoves.put(Board.board[row + i * increment][col + j * increment], false);
+                    possibleMoves.put(Board.board[row + i * increment][col + j * increment], MOVABLE_UNATTACKABLE);
 
                     if(Board.pieces[row + i * increment][col + j * increment].getColor() != Piece.NO_COLOR) {
-                        possibleMoves.replace(Board.board[row + i * increment][col + j * increment], true);
+                        possibleMoves.replace(Board.board[row + i * increment][col + j * increment], MOVABLE_ATTACKABLE);
                         break;
                     }
 
                     increment++;
+                }
+
+                if(Board.pieces[row + i * increment][col + j * increment].getColor() == Board.pieces[row][col].getColor()) {
+                    possibleMoves.put(Board.board[row + i * increment][col + j * increment], BLOCKED);
                 }
             }
         }
@@ -118,8 +135,8 @@ public class Move {
         return possibleMoves;
     }
 
-    public static HashMap<Square, Boolean> knightPieceMoves(int row, int col) {
-        HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
+    public static HashMap<Square, boolean[]> knightPieceMoves(int row, int col) {
+        HashMap<Square, boolean[]> possibleMoves = new HashMap<>();
         System.out.println(row + " " + col);
 
         /* Difficult to understand
@@ -138,11 +155,13 @@ public class Move {
                 if(i == 0) {
                     if(Board.withinBoard(row + displacement, col)) {
                         for(int direction = -1; direction <= 1; direction += 2) {
-                            if(Board.withinBoard(row + displacement, col + direction) && Board.pieces[row + displacement][col + direction].getColor() != Board.pieces[row][col].getColor()) { //Checks for space below piece
-                                if(Board.pieces[row + displacement][col + direction].getColor() != Piece.NO_COLOR) {
-                                    possibleMoves.put(Board.board[row + displacement][col + direction], true);
+                            if(Board.withinBoard(row + displacement, col + direction)) { //Checks for space below piece
+                                if(Board.pieces[row + displacement][col + direction].getColor() == Board.pieces[row][col].getColor()) {
+                                    possibleMoves.put(Board.board[row + displacement][col + direction], BLOCKED);
+                                } else if(Board.pieces[row + displacement][col + direction].getColor() != Piece.NO_COLOR) {
+                                    possibleMoves.put(Board.board[row + displacement][col + direction], MOVABLE_ATTACKABLE);
                                 } else {
-                                    possibleMoves.put(Board.board[row + displacement][col + direction], false);
+                                    possibleMoves.put(Board.board[row + displacement][col + direction], MOVABLE_UNATTACKABLE);
                                 }
                             }
                         }
@@ -150,11 +169,13 @@ public class Move {
                 } else {
                     if(Board.withinBoard(row, col + displacement)) {
                         for(int direction = -1; direction <= 1; direction += 2) {
-                            if(Board.withinBoard(row + direction, col + displacement) && Board.pieces[row + direction][col + displacement].getColor() != Board.pieces[row][col].getColor()) { //Checks for space below piece
-                                if(Board.pieces[row + direction][col + displacement].getColor() != Piece.NO_COLOR) {
-                                    possibleMoves.put(Board.board[row + direction][col + displacement], true);
+                            if(Board.withinBoard(row + direction, col + displacement)) { //Checks for space below piece
+                                if(Board.pieces[row + direction][col + displacement].getColor() != Board.pieces[row][col].getColor()) {
+                                    possibleMoves.put(Board.board[row + direction][col + displacement], BLOCKED);
+                                } else if(Board.pieces[row + direction][col + displacement].getColor() != Piece.NO_COLOR) {
+                                    possibleMoves.put(Board.board[row + direction][col + displacement], MOVABLE_ATTACKABLE);
                                 } else {
-                                    possibleMoves.put(Board.board[row + direction][col + displacement], false);
+                                    possibleMoves.put(Board.board[row + direction][col + displacement], MOVABLE_UNATTACKABLE);
                                 }
                             }
                         }
@@ -167,38 +188,48 @@ public class Move {
         return possibleMoves;
     }
 
-    public static HashMap<Square, Boolean> rookPieceMoves(int row, int col) {
-        HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
+    public static HashMap<Square, boolean[]> rookPieceMoves(int row, int col) {
+        HashMap<Square, boolean[]> possibleMoves = new HashMap<>();
 
         for(int i = -1; i <= 1; i += 2) { //Checks up first, then down
             int increment = 1;
             while(Board.withinBoard(row + i * increment, col) &&
                   Board.pieces[row + i * increment][col].getColor() != Board.pieces[row][col].getColor()) {
                 
-                possibleMoves.put(Board.board[row + i * increment][col], false);
+                possibleMoves.put(Board.board[row + i * increment][col], MOVABLE_UNATTACKABLE);
 
                 if(Board.pieces[row + i * increment][col].getColor() != Piece.NO_COLOR) {
-                    possibleMoves.replace(Board.board[row + i * increment][col], true);
+                    possibleMoves.replace(Board.board[row + i * increment][col], MOVABLE_UNATTACKABLE);
                     break;
                 }
 
                 increment++;
             }
+
+            if(Board.pieces[row + i * increment][col].getColor() == Board.pieces[row][col].getColor()) {
+                possibleMoves.put(Board.board[row + i * increment][col], BLOCKED);
+            }
+
         }
+        
         for(int j = -1; j <= 1; j += 2) { //Checks left then right
             int increment = 1;
 
             while(Board.withinBoard(row, col + j * increment) &&
                   Board.pieces[row][col + j * increment].getColor() != Board.pieces[row][col].getColor()) {
                 
-                possibleMoves.put(Board.board[row][col + j * increment], false);
+                possibleMoves.put(Board.board[row][col + j * increment], MOVABLE_UNATTACKABLE);
 
                 if(Board.pieces[row][col + j * increment].getColor() != Piece.NO_COLOR) {
-                    possibleMoves.replace(Board.board[row][col + j * increment], true);
+                    possibleMoves.replace(Board.board[row][col + j * increment], MOVABLE_ATTACKABLE);
                     break;
                 }
 
                 increment++;
+            }
+
+            if(Board.pieces[row][col + j * increment].getColor() == Board.pieces[row][col].getColor()) {
+                possibleMoves.put(Board.board[row][col + j * increment], BLOCKED);
             }
         }
 
@@ -206,8 +237,8 @@ public class Move {
         return possibleMoves;
     }
 
-    public static HashMap<Square, Boolean> queenPieceMoves(int row, int col) {
-        HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
+    public static HashMap<Square, boolean[]> queenPieceMoves(int row, int col) {
+        HashMap<Square, boolean[]> possibleMoves = new HashMap<>();
 
         //A queen is basically a rook + bishop
         possibleMoves.putAll(bishopPieceMoves(row, col));
@@ -226,10 +257,10 @@ public class Move {
     }
 
     public static void removeMovesFromSquare(Square selectedSquare) {
-        for(Square square : selectedSquare.getMovableSquares().keySet()) {
+        for(Square square : selectedSquare.getMovableSpaces().keySet()) {
             allPossibleMoves.get(square).remove(selectedSquare);
         }
-        selectedSquare.removeAllMovableSpaces();
+        selectedSquare.removeAllInteractableSpaces();
     }
 
     public static void updatePossibleMoves(Square targetSquare) {
@@ -248,17 +279,17 @@ public class Move {
         int row = targetSquare.getRow(), col = targetSquare.getCol();
 
         switch(targetSquare.getPiece().getRank()) {
-            case Piece.KING: targetSquare.setAllMovableSpaces(kingPieceMoves(row, col));
+            case Piece.KING: targetSquare.setAllInteractableSpaces(kingPieceMoves(row, col));
                              break;
-            case Piece.PAWN: targetSquare.setAllMovableSpaces(pawnPieceMoves(row, col));
+            case Piece.PAWN: targetSquare.setAllInteractableSpaces(pawnPieceMoves(row, col));
                              break;
-            case Piece.BISHOP: targetSquare.setAllMovableSpaces(bishopPieceMoves(row, col));
+            case Piece.BISHOP: targetSquare.setAllInteractableSpaces(bishopPieceMoves(row, col));
                                break;
-            case Piece.KNIGHT: targetSquare.setAllMovableSpaces(knightPieceMoves(row, col));
+            case Piece.KNIGHT: targetSquare.setAllInteractableSpaces(knightPieceMoves(row, col));
                                break;
-            case Piece.ROOK: targetSquare.setAllMovableSpaces(rookPieceMoves(row, col));
+            case Piece.ROOK: targetSquare.setAllInteractableSpaces(rookPieceMoves(row, col));
                              break;
-            case Piece.QUEEN: targetSquare.setAllMovableSpaces(queenPieceMoves(row, col));
+            case Piece.QUEEN: targetSquare.setAllInteractableSpaces(queenPieceMoves(row, col));
                               break;
             default: break;
         }
