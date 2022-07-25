@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.*;
@@ -8,9 +9,10 @@ public class Square extends JLabel {
     public static final Color DARK_SQUARE_COLOR = new Color(118,150,86);
 
     /**
-     * HashMap that stores the squares that it can move along if it is an Attackable Square
+     * HashMap that stores the squares that it can move or it is blocked by another piece. First boolean value depicts whether it is blocked or not,
+     * second boolean value depicts whether its an attackable square.
      */
-    private HashMap<Square, Boolean> movableSpaces = new HashMap<Square, Boolean>();
+    private HashMap<Square, boolean[]> interactableSpaces = new HashMap<Square, boolean[]>();
 
     private String boardCode;
     private int row;
@@ -30,27 +32,74 @@ public class Square extends JLabel {
 
     }
 
+    /*--------------------- Set Methods ----------------------- */
+
     public void setMovableSpace(Square key, Boolean value) {
-        if(!movableSpaces.containsKey(key)) return;
-        movableSpaces.replace(key, value);
+        if(!interactableSpaces.containsKey(key)) return;
+
+        boolean[] temp = {true, value};
+        interactableSpaces.replace(key, temp);
     }
 
-    public void setAllMovableSpaces(HashMap<Square, Boolean> list) {
-        movableSpaces = list;
+    public void setBlockedSpace(Square key) {
+        if(!interactableSpaces.containsKey(key)) return;
+
+        boolean[] temp = {false, false};
+        interactableSpaces.replace(key, temp);
     }
 
-    public void removeMovableSpace(Square space) {
-        if(!movableSpaces.containsKey(space)) return;
-        movableSpaces.remove(space);
+    public void setAllInteractableSpaces(HashMap<Square, boolean[]> list) {
+        interactableSpaces = list;
     }
 
-    public void removeAllMovableSpaces() {
-        movableSpaces.clear();
+    /*--------------------- Remove Methods ----------------------- */
+
+    public void removeInteractableSpace(Square space) {
+        if(!interactableSpaces.containsKey(space)) return;
+        interactableSpaces.remove(space);
     }
 
-    public HashMap<Square, Boolean> getMovableSquares() {
-        return movableSpaces;
+    public void removeAllInteractableSpaces() {
+        interactableSpaces.clear();
     }
+
+    /*--------------------- Get Methods ----------------------- */
+
+    public HashMap<Square, Boolean> getMovableSpaces() {
+        HashMap<Square, Boolean> allMovableSpaces = new HashMap<Square, Boolean>();
+        Square[] allSquares = (Square[]) interactableSpaces.keySet().toArray();
+        
+        for(int i = 0; i < allSquares.length; i++) {
+            Square currentSquare = allSquares[i];
+
+            if(interactableSpaces.get(currentSquare)[0]) {
+                allMovableSpaces.put(currentSquare, interactableSpaces.get(currentSquare)[1]);
+            }
+        }
+
+        return allMovableSpaces;
+    }
+
+    public ArrayList<Square> getBlockedSpaces() {
+        ArrayList<Square> allBlockedSpaces = new ArrayList<Square>();
+        Square[] allSquares = (Square[]) interactableSpaces.keySet().toArray();
+        
+        for(int i = 0; i < allSquares.length; i++) {
+            Square currentSquare = allSquares[i];
+
+            if(!interactableSpaces.get(currentSquare)[0]) {
+                allBlockedSpaces.add(currentSquare);
+            }
+        }
+
+        return allBlockedSpaces;
+    }
+
+    public HashMap<Square, boolean[]> getAllInteractableSpaces() {
+        return interactableSpaces;
+    }
+    
+    /*--------------------- Other Get Methods ----------------------- */
 
     public Piece getPiece() {
         return (Piece) getComponent(0);
