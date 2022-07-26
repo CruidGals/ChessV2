@@ -1,7 +1,5 @@
 import java.util.*;
 import java.util.concurrent.*;
-
-import javax.annotation.processing.Generated;
 public class Move {
 
     static int test = 0;
@@ -31,12 +29,14 @@ public class Move {
 
         for(int i = -1; i <= 1; i++) {
             for(int j = -1; j <= 1; j++) {
-                if(!Board.withinBoard(row + i, col + j) || (i == 0 && j == 0)) continue;
+                if((!Board.withinBoard(row + i, col + j) || (i == 0 && j == 0)) || Board.pieces[row + i][col + j].getColor() == Board.pieces[row][col].getColor()) continue;
 
-                if(Board.pieces[row][col].getColor() != Board.pieces[row + i][col + j].getColor() || Board.pieces[row + i][col + j].getRank() == Piece.NO_PIECE) {
-                    //Implement check/checkmate feature later
-                    possibleMoves.put(Board.board[row + i][col + j], Board.pieces[row][col].getColor() != Board.pieces[row + i][col + j].getColor());                   
+                if(Board.pieces[row + i][col + j].getColor() == Piece.NO_COLOR) {
+                    possibleMoves.put(Board.board[row + i][col + j], false);
+                } else {
+                    possibleMoves.put(Board.board[row + i][col + j], true);
                 }
+
             }
         }
 
