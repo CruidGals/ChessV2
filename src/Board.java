@@ -101,6 +101,7 @@ public class Board extends JFrame {
             Component c = boardPanel.findComponentAt(e.getX(), e.getY());
 
             if (e.getButton() == MouseEvent.BUTTON1) {
+                selectedPiece = null;
 
                 if (c instanceof Square || ((Piece) c).getRank() == Piece.NO_PIECE) {
                     if(pieceSelected) {
@@ -112,11 +113,9 @@ public class Board extends JFrame {
                 
                 Square currentSelectedSquare = (Square) ((Piece) c).getParent();
                 if(pieceSelected) {
-                    selectedPieceParent.toggleMoveOptions();
                     if(selectedPieceParent != currentSelectedSquare) {
+                        selectedPieceParent.toggleMoveOptions();
                         currentSelectedSquare.toggleMoveOptions();
-                    } else {
-                        pieceSelected = false;
                     }
                 } else {
                     currentSelectedSquare.toggleMoveOptions();
