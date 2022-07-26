@@ -6,7 +6,7 @@ public class Move {
     /**
      * The Keys defines the end squares, while the Values store which squares can move to the specified Key
      */
-    public static Map<Square, CopyOnWriteArrayList<Square>> allPossibleMoves = new HashMap<Square, CopyOnWriteArrayList<Square>>(64);
+    public static Map<Square, CopyOnWriteArrayList<Square>> allPossibleMoves = new HashMap<>(64);
     
     public static void initMoves() {
         for(Square[] row : Board.board) {
@@ -41,7 +41,7 @@ public class Move {
     /* --------------------- Piece Move Checkers ------------------------------- */
 
     public static HashMap<Square, Boolean> kingPieceMoves(int row, int col) {
-        HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
+        HashMap<Square, Boolean> possibleMoves = new HashMap<>();
 
         for(int i = -1; i <= 1; i++) {
             for(int j = -1; j <= 1; j++) {
@@ -59,7 +59,7 @@ public class Move {
     }
     
     public static HashMap<Square, Boolean> pawnPieceMoves(int row, int col) {
-        HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
+        HashMap<Square, Boolean> possibleMoves = new HashMap<>();
 
         boolean canDoubleMove;
 
@@ -94,7 +94,7 @@ public class Move {
     }
 
     public static HashMap<Square, Boolean> bishopPieceMoves(int row, int col) {
-        HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
+        HashMap<Square, Boolean> possibleMoves = new HashMap<>();
 
         for(int i = -1; i <= 1; i += 2) { //Checks up diagonals first, then down diagonals
             for(int j = -1; j <= 1; j += 2) { //Checks left then right
@@ -119,7 +119,7 @@ public class Move {
     }
 
     public static HashMap<Square, Boolean> knightPieceMoves(int row, int col) {
-        HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
+        HashMap<Square, Boolean> possibleMoves = new HashMap<>();
         System.out.println(row + " " + col);
 
         /* Difficult to understand
@@ -168,7 +168,7 @@ public class Move {
     }
 
     public static HashMap<Square, Boolean> rookPieceMoves(int row, int col) {
-        HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
+        HashMap<Square, Boolean> possibleMoves = new HashMap<>();
 
         for(int i = -1; i <= 1; i += 2) { //Checks up first, then down
             int increment = 1;
@@ -207,7 +207,7 @@ public class Move {
     }
 
     public static HashMap<Square, Boolean> queenPieceMoves(int row, int col) {
-        HashMap<Square, Boolean> possibleMoves = new HashMap<Square, Boolean>();
+        HashMap<Square, Boolean> possibleMoves = new HashMap<>();
 
         //A queen is basically a rook + bishop
         possibleMoves.putAll(bishopPieceMoves(row, col));
