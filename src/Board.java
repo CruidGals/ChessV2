@@ -152,7 +152,7 @@ public class Board extends JFrame {
             
             Square targetSquare = (Square) c;
 
-            if(selectedPieceParent.getMovableSquares().containsKey(targetSquare)) {
+            if(selectedPieceParent.getMovableSpaces().containsKey(targetSquare)) {
                 Move.removeMovesFromSquare(selectedPieceParent);
                 selectedPieceParent.add(new Piece(Piece.NO_COLOR, Piece.NO_PIECE));
                 selectedPieceParent.validate();
@@ -168,7 +168,7 @@ public class Board extends JFrame {
 
             Move.updatePossibleMoves(targetSquare);
             
-            System.out.println(targetSquare.getMovableSquares());
+            System.out.println(targetSquare.getMovableSpaces());
         }
 
     }

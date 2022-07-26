@@ -10,7 +10,7 @@ public class Square extends JLabel {
     /**
      * HashMap that stores the squares that it can move along if it is an Attackable Square
      */
-    private HashMap<Square, Boolean> movableSpaces = new HashMap<>();
+    private HashMap<Square, Boolean> movableSpaces = new HashMap<Square, Boolean>();
 
     private String boardCode;
     private int row;
@@ -48,7 +48,7 @@ public class Square extends JLabel {
         movableSpaces.clear();
     }
 
-    public HashMap<Square, Boolean> getMovableSquares() {
+    public HashMap<Square, Boolean> getMovableSpaces() {
         return movableSpaces;
     }
 
