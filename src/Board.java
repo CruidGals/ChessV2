@@ -166,7 +166,7 @@ public class Board extends JFrame {
                 selectedPieceParent.validate();
             }
 
-            Move.updatePossibleMoves(targetSquare);
+            Move.updatePossibleMoves(selectedPieceParent, targetSquare);
             
             System.out.println(targetSquare.getMovableSpaces());
         }

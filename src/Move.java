@@ -1,5 +1,7 @@
 import java.util.*;
 import java.util.concurrent.*;
+
+import javax.annotation.processing.Generated;
 public class Move {
 
     static int test = 0;
@@ -54,7 +56,7 @@ public class Move {
             }
         }
 
-        putMovesOntoDirectory(possibleMoves.keySet(), Board.board[row][col]);
+        if(Board.pieces[row][col].getRank() != Piece.NO_PIECE) putMovesOntoDirectory(possibleMoves.keySet(), Board.board[row][col]);
         return possibleMoves;
     }
     
@@ -89,7 +91,7 @@ public class Move {
             possibleMoves.put(Board.board[row + direction * 1][col - 1], true);
         }
 
-        putMovesOntoDirectory(possibleMoves.keySet(), Board.board[row][col]);
+        if(Board.pieces[row][col].getRank() != Piece.NO_PIECE) putMovesOntoDirectory(possibleMoves.keySet(), Board.board[row][col]);
         return possibleMoves;
     }
 
@@ -114,7 +116,7 @@ public class Move {
             }
         }
 
-        putMovesOntoDirectory(possibleMoves.keySet(), Board.board[row][col]);
+        if(Board.pieces[row][col].getRank() != Piece.NO_PIECE) putMovesOntoDirectory(possibleMoves.keySet(), Board.board[row][col]);
         return possibleMoves;
     }
 
@@ -163,7 +165,7 @@ public class Move {
             }
         }
         
-        putMovesOntoDirectory(possibleMoves.keySet(), Board.board[row][col]);
+        if(Board.pieces[row][col].getRank() != Piece.NO_PIECE) putMovesOntoDirectory(possibleMoves.keySet(), Board.board[row][col]);
         return possibleMoves;
     }
 
@@ -202,7 +204,7 @@ public class Move {
             }
         }
 
-        putMovesOntoDirectory(possibleMoves.keySet(), Board.board[row][col]);
+        if(Board.pieces[row][col].getRank() != Piece.NO_PIECE) putMovesOntoDirectory(possibleMoves.keySet(), Board.board[row][col]);
         return possibleMoves;
     }
 
@@ -213,7 +215,6 @@ public class Move {
         possibleMoves.putAll(bishopPieceMoves(row, col));
         possibleMoves.putAll(rookPieceMoves(row, col));
 
-        putMovesOntoDirectory(possibleMoves.keySet(), Board.board[row][col]);
         return possibleMoves;
     }
 
@@ -232,16 +233,26 @@ public class Move {
         selectedSquare.removeAllMovableSpaces();
     }
 
-    public static void updatePossibleMoves(Square targetSquare) {
+    public static void updatePossibleMoves(Square selectedSquare, Square targetSquare) {
+        
+        /*-------------------- This part affects the targetedSquare ---------------------------- */
         for(Square square : allPossibleMoves.get(targetSquare)) {
-            if(square.getPiece().getColor() == targetSquare.getPiece().getColor()) {
-                allPossibleMoves.get(targetSquare).remove(square);
-            } else {
-                if(square.getPiece().getColor() != Piece.NO_COLOR) {
-                    square.setMovableSpace(targetSquare, true);
-                } else {
-                    square.setMovableSpace(targetSquare, false);
-                }
+            removeMovesFromSquare(square);
+
+            switch(square.getPiece().getRank()) {
+                case Piece.KING: square.setAllMovableSpaces(kingPieceMoves(square.getRow(), square.getCol()));
+                                 break;
+                case Piece.PAWN: square.setAllMovableSpaces(pawnPieceMoves(square.getRow(), square.getCol()));
+                                 break;
+                case Piece.BISHOP: square.setAllMovableSpaces(bishopPieceMoves(square.getRow(), square.getCol()));
+                                   break;
+                case Piece.KNIGHT: square.setAllMovableSpaces(knightPieceMoves(square.getRow(), square.getCol()));
+                                   break;
+                case Piece.ROOK: square.setAllMovableSpaces(rookPieceMoves(square.getRow(), square.getCol()));
+                                 break;
+                case Piece.QUEEN: square.setAllMovableSpaces(queenPieceMoves(square.getRow(), square.getCol()));
+                                  break;
+                default: break;
             }
         }
 
@@ -261,6 +272,37 @@ public class Move {
             case Piece.QUEEN: targetSquare.setAllMovableSpaces(queenPieceMoves(row, col));
                               break;
             default: break;
+        }
+
+        /*-------------------- This part affects the selectedSquare ---------------------------- */
+        row = selectedSquare.getRow();
+        col = selectedSquare.getCol();
+
+        for(Square square : knightPieceMoves(row, col).keySet()) {
+            if(square.getPiece().getRank() != Piece.KNIGHT) continue;
+
+            removeMovesFromSquare(square);
+            square.setAllMovableSpaces(knightPieceMoves(square.getRow(), square.getCol()));
+        }
+
+        for(Square square : queenPieceMoves(row, col).keySet()) {
+            removeMovesFromSquare(square);
+
+            switch(square.getPiece().getRank()) {
+                case Piece.KING: square.setAllMovableSpaces(kingPieceMoves(square.getRow(), square.getCol()));
+                                 break;
+                case Piece.PAWN: square.setAllMovableSpaces(pawnPieceMoves(square.getRow(), square.getCol()));
+                                 break;
+                case Piece.BISHOP: square.setAllMovableSpaces(bishopPieceMoves(square.getRow(), square.getCol()));
+                                   break;
+                case Piece.KNIGHT: square.setAllMovableSpaces(knightPieceMoves(square.getRow(), square.getCol()));
+                                   break;
+                case Piece.ROOK: square.setAllMovableSpaces(rookPieceMoves(square.getRow(), square.getCol()));
+                                 break;
+                case Piece.QUEEN: square.setAllMovableSpaces(queenPieceMoves(square.getRow(), square.getCol()));
+                                  break;
+                default: break;
+            }
         }
     }
 }
