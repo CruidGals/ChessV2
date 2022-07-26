@@ -19,23 +19,7 @@ public class Move {
 
         for(int row = 0; row < 8; row++) {
             for(int col = 0; col < 8; col++) {
-                Square square = Board.board[row][col];
-
-                switch(square.getPiece().getRank()) {
-                    case Piece.KING: square.setAllMovableSpaces(kingPieceMoves(row, col));
-                                     break;
-                    case Piece.PAWN: square.setAllMovableSpaces(pawnPieceMoves(row, col));
-                                     break;
-                    case Piece.BISHOP: square.setAllMovableSpaces(bishopPieceMoves(row, col));
-                                       break;
-                    case Piece.KNIGHT: square.setAllMovableSpaces(knightPieceMoves(row, col));
-                                       break;
-                    case Piece.ROOK: square.setAllMovableSpaces(rookPieceMoves(row, col));
-                                     break;
-                    case Piece.QUEEN: square.setAllMovableSpaces(queenPieceMoves(row, col));
-                                      break;
-                    default: break;
-                }
+                setMovableSpacesFromRank(Board.board[row][col]);
             }
         }
     }
@@ -238,45 +222,14 @@ public class Move {
         /*-------------------- This part affects the targetedSquare ---------------------------- */
         for(Square square : allPossibleMoves.get(targetSquare)) {
             removeMovesFromSquare(square);
-
-            switch(square.getPiece().getRank()) {
-                case Piece.KING: square.setAllMovableSpaces(kingPieceMoves(square.getRow(), square.getCol()));
-                                 break;
-                case Piece.PAWN: square.setAllMovableSpaces(pawnPieceMoves(square.getRow(), square.getCol()));
-                                 break;
-                case Piece.BISHOP: square.setAllMovableSpaces(bishopPieceMoves(square.getRow(), square.getCol()));
-                                   break;
-                case Piece.KNIGHT: square.setAllMovableSpaces(knightPieceMoves(square.getRow(), square.getCol()));
-                                   break;
-                case Piece.ROOK: square.setAllMovableSpaces(rookPieceMoves(square.getRow(), square.getCol()));
-                                 break;
-                case Piece.QUEEN: square.setAllMovableSpaces(queenPieceMoves(square.getRow(), square.getCol()));
-                                  break;
-                default: break;
-            }
+            setMovableSpacesFromRank(square);
         }
 
-        int row = targetSquare.getRow(), col = targetSquare.getCol();
-
-        switch(targetSquare.getPiece().getRank()) {
-            case Piece.KING: targetSquare.setAllMovableSpaces(kingPieceMoves(row, col));
-                             break;
-            case Piece.PAWN: targetSquare.setAllMovableSpaces(pawnPieceMoves(row, col));
-                             break;
-            case Piece.BISHOP: targetSquare.setAllMovableSpaces(bishopPieceMoves(row, col));
-                               break;
-            case Piece.KNIGHT: targetSquare.setAllMovableSpaces(knightPieceMoves(row, col));
-                               break;
-            case Piece.ROOK: targetSquare.setAllMovableSpaces(rookPieceMoves(row, col));
-                             break;
-            case Piece.QUEEN: targetSquare.setAllMovableSpaces(queenPieceMoves(row, col));
-                              break;
-            default: break;
-        }
+        setMovableSpacesFromRank(targetSquare);
 
         /*-------------------- This part affects the selectedSquare ---------------------------- */
-        row = selectedSquare.getRow();
-        col = selectedSquare.getCol();
+        int row = selectedSquare.getRow();
+        int col = selectedSquare.getCol();
 
         for(Square square : knightPieceMoves(row, col).keySet()) {
             if(square.getPiece().getRank() != Piece.KNIGHT) continue;
@@ -287,22 +240,25 @@ public class Move {
 
         for(Square square : queenPieceMoves(row, col).keySet()) {
             removeMovesFromSquare(square);
+            setMovableSpacesFromRank(square);
+        }
+    }
 
-            switch(square.getPiece().getRank()) {
-                case Piece.KING: square.setAllMovableSpaces(kingPieceMoves(square.getRow(), square.getCol()));
-                                 break;
-                case Piece.PAWN: square.setAllMovableSpaces(pawnPieceMoves(square.getRow(), square.getCol()));
-                                 break;
-                case Piece.BISHOP: square.setAllMovableSpaces(bishopPieceMoves(square.getRow(), square.getCol()));
-                                   break;
-                case Piece.KNIGHT: square.setAllMovableSpaces(knightPieceMoves(square.getRow(), square.getCol()));
-                                   break;
-                case Piece.ROOK: square.setAllMovableSpaces(rookPieceMoves(square.getRow(), square.getCol()));
-                                 break;
-                case Piece.QUEEN: square.setAllMovableSpaces(queenPieceMoves(square.getRow(), square.getCol()));
-                                  break;
-                default: break;
-            }
+    private static void setMovableSpacesFromRank(Square square) {
+        switch(square.getPiece().getRank()) {
+            case Piece.KING: square.setAllMovableSpaces(kingPieceMoves(square.getRow(), square.getCol()));
+                             break;
+            case Piece.PAWN: square.setAllMovableSpaces(pawnPieceMoves(square.getRow(), square.getCol()));
+                             break;
+            case Piece.BISHOP: square.setAllMovableSpaces(bishopPieceMoves(square.getRow(), square.getCol()));
+                               break;
+            case Piece.KNIGHT: square.setAllMovableSpaces(knightPieceMoves(square.getRow(), square.getCol()));
+                               break;
+            case Piece.ROOK: square.setAllMovableSpaces(rookPieceMoves(square.getRow(), square.getCol()));
+                             break;
+            case Piece.QUEEN: square.setAllMovableSpaces(queenPieceMoves(square.getRow(), square.getCol()));
+                              break;
+            default: break;
         }
     }
 }
