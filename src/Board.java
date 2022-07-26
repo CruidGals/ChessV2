@@ -14,6 +14,9 @@ public class Board extends JFrame {
     // Vars for dragging
     private static Piece selectedPiece;
     private static Square selectedPieceParent;
+    
+    //Vars for visual for moving a piece
+    private static boolean pieceSelected = false;
 
     public Board() {
         updateFromFEN();
@@ -86,6 +89,11 @@ public class Board extends JFrame {
         return boardPanel;
     }
 
+    /*----------------- Getter and Setter ------------------------- */
+    public boolean getPieceSelected() {
+        return pieceSelected;
+    }
+
     private class PieceClickListener extends MouseAdapter {
 
         @Override
@@ -93,10 +101,27 @@ public class Board extends JFrame {
             Component c = boardPanel.findComponentAt(e.getX(), e.getY());
 
             if (e.getButton() == MouseEvent.BUTTON1) {
-                selectedPiece = null;
-                
 
-                if (c instanceof Square || ((Piece) c).getRank() == Piece.NO_PIECE) return;
+                if (c instanceof Square || ((Piece) c).getRank() == Piece.NO_PIECE) {
+                    if(pieceSelected) {
+                        selectedPieceParent.toggleMoveOptions();
+                        pieceSelected = false;
+                    }
+                    return;
+                }
+                
+                Square currentSelectedSquare = (Square) ((Piece) c).getParent();
+                if(pieceSelected) {
+                    selectedPieceParent.toggleMoveOptions();
+                    if(selectedPieceParent != currentSelectedSquare) {
+                        currentSelectedSquare.toggleMoveOptions();
+                    } else {
+                        pieceSelected = false;
+                    }
+                } else {
+                    currentSelectedSquare.toggleMoveOptions();
+                    pieceSelected = true;
+                }
 
                 selectedPiece = (Piece) c;
                 selectedPieceParent = (Square) ((Piece) c).getParent();
@@ -105,6 +130,7 @@ public class Board extends JFrame {
                 layeredPanel.add(selectedPiece, JLayeredPane.DRAG_LAYER);
                 
                 selectedPiece.setLocation(e.getX() - 50, e.getY() - 50);
+
             }
 
             //DEBUG CODE
@@ -153,6 +179,9 @@ public class Board extends JFrame {
             Square targetSquare = (Square) c;
 
             if(selectedPieceParent.getMovableSpaces().containsKey(targetSquare)) {
+                selectedPieceParent.toggleMoveOptions();
+                pieceSelected = false;
+
                 Move.removeMovesFromSquare(selectedPieceParent);
                 selectedPieceParent.add(new Piece(Piece.NO_COLOR, Piece.NO_PIECE));
                 selectedPieceParent.validate();
