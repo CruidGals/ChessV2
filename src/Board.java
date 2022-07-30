@@ -2,7 +2,6 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Arrays;
 
 public class Board extends JFrame {
     public static Square[][] board = new Square[8][8];
@@ -103,7 +102,7 @@ public class Board extends JFrame {
             if (e.getButton() == MouseEvent.BUTTON1) {
                 selectedPiece = null;
 
-                if (c instanceof Square || ((Piece) c).getRank() == Piece.NO_PIECE) {
+                if ((c instanceof Square || ((Piece) c).getRank() == Piece.NO_PIECE) || ((Piece) c).getColor() != Game.turn) {
                     if(pieceSelected) {
                         selectedPieceParent.toggleMoveOptions();
                         pieceSelected = false;
@@ -189,6 +188,8 @@ public class Board extends JFrame {
                 targetSquare.add(selectedPiece);
                 targetSquare.validate();
                 FenDecoder.changePieceRowCodes(new Square[] {selectedPieceParent, targetSquare});
+
+                Game.switchTurn();
             } else {
                 selectedPieceParent.add(selectedPiece);
                 selectedPieceParent.validate();
