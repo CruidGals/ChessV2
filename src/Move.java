@@ -225,15 +225,15 @@ public class Move {
             setMovableSpacesFromRank(square);
         }
 
-        for(int row = selectedSquare.getRow() - 1; row <= 1; row += 2) {
-            for(int col = selectedSquare.getCol() - 1; col <= 1; col += 2) {
-                if(Board.withinBoard(row, col) && Board.pieces[row][col].getRank() == Piece.PAWN) {
+        for(int row = targetSquare.getRow() - 1; row <= targetSquare.getRow() + 1; row += 2) {
+            for(int col = targetSquare.getCol() - 1; col <= targetSquare.getCol() + 1; col += 2) {
+                if(Board.withinBoard(row, col) && (Board.pieces[row][col].getRank() == Piece.PAWN)) {
                     removeMovesFromSquare(Board.board[row][col]);
                     setMovableSpacesFromRank(Board.board[row][col]);
                 }
             }
         }
-
+        
         setMovableSpacesFromRank(targetSquare);
 
         /*-------------------- This part affects the selectedSquare ---------------------------- */
