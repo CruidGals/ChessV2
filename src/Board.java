@@ -100,17 +100,25 @@ public class Board extends JFrame {
             Component c = boardPanel.findComponentAt(e.getX(), e.getY());
 
             if (e.getButton() == MouseEvent.BUTTON1) {
-                selectedPiece = null;
+                
+                Square currentSelectedSquare = (Square) ((Piece) c).getParent();
 
                 if ((c instanceof Square || ((Piece) c).getRank() == Piece.NO_PIECE) || ((Piece) c).getColor() != Game.turn) {
+
+                    if((currentSelectedSquare.getBackground() == Square.LIGHT_MOVABLE_SQUARE_COLOR ||
+                       currentSelectedSquare.getBackground() == Square.DARK_MOVABLE_SQUARE_COLOR) ||
+                       currentSelectedSquare.getBackground() == Square.ATTACKABLE_SQUARE_COLOR) {
+
+                        return;
+                    }
                     if(pieceSelected) {
                         selectedPieceParent.toggleMoveOptions();
                         pieceSelected = false;
+                        selectedPiece = null;
                     }
                     return;
                 }
                 
-                Square currentSelectedSquare = (Square) ((Piece) c).getParent();
                 if(pieceSelected) {
                     if(selectedPieceParent != currentSelectedSquare) {
                         selectedPieceParent.toggleMoveOptions();
@@ -122,7 +130,7 @@ public class Board extends JFrame {
                 }
 
                 selectedPiece = (Piece) c;
-                selectedPieceParent = (Square) ((Piece) c).getParent();
+                selectedPieceParent = currentSelectedSquare;
                 selectedPiece.setSize(selectedPiece.getPreferredSize());
 
                 layeredPanel.add(selectedPiece, JLayeredPane.DRAG_LAYER);
@@ -190,6 +198,7 @@ public class Board extends JFrame {
                 FenDecoder.changePieceRowCodes(new Square[] {selectedPieceParent, targetSquare});
 
                 Game.switchTurn();
+                selectedPiece = null;
             } else {
                 selectedPieceParent.add(selectedPiece);
                 selectedPieceParent.validate();
